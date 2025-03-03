@@ -38,14 +38,17 @@ abstract class BaseMapScreenState<T extends BaseMapScreen> extends State<T> {
       locationSettings: LocationSettings(
         locationEnabled: true,
         shouldRequestAuthorizationOrPermission: true,
+        cameraMode: CameraMode.trackingGps,
         locationComponentOptions: LocationComponentOptions(
           pulseColor: "red",
           backgroundTintColor: "yellow",
           foregroundTintColor: "green",
+          pulseEnabled: true,
         ),
         locationEngineRequestOptions: LocationEngineRequestOptions(
           displacement: 10,
           priority: LocationEngineRequestPriority.highAccuracy,
+          provider: LocationProvider.gps,
         ),
       ),
       hyperComposition: false,

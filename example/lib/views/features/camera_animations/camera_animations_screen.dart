@@ -34,7 +34,7 @@ class _CameraAnimationsScreenState
                   onPressed: () {
                     controller?.animateCamera(
                       CameraUpdateFactory.newLatLng(const LatLng(27.34, 85.73)),
-                      duration: 5000,
+                      duration: const Duration(milliseconds: 5000),
                     );
                   },
                 ),
@@ -51,7 +51,7 @@ class _CameraAnimationsScreenState
                           tilt: 0,
                         ),
                       ),
-                      duration: 5000,
+                      duration: const Duration(milliseconds: 5000),
                     );
                   },
                 ),
@@ -69,7 +69,16 @@ class _CameraAnimationsScreenState
                         padding: 0,
                         bearing: 90,
                       ),
-                      duration: 5000,
+                      duration: const Duration(milliseconds: 5000),
+                    );
+                  },
+                ),
+                AnimationButton(
+                  label: "Animate To Current Location",
+                  icon: Icons.remove_circle_outline,
+                  onPressed: () {
+                    controller?.animateCameraToCurrentLocation(
+                      duration: const Duration(milliseconds: 5000),
                     );
                   },
                 ),
@@ -79,7 +88,7 @@ class _CameraAnimationsScreenState
                   onPressed: () {
                     controller?.animateCamera(
                       CameraUpdateFactory.zoomTo(10),
-                      duration: 5000,
+                      duration: const Duration(milliseconds: 5000),
                     );
                   },
                 ),
@@ -89,7 +98,7 @@ class _CameraAnimationsScreenState
                   onPressed: () {
                     controller?.animateCamera(
                       CameraUpdateFactory.zoomBy(2),
-                      duration: 5000,
+                      duration: const Duration(milliseconds: 5000),
                     );
                   },
                 ),
@@ -99,7 +108,7 @@ class _CameraAnimationsScreenState
                   onPressed: () {
                     controller?.animateCamera(
                       CameraUpdateFactory.zoomBy(-2),
-                      duration: 5000,
+                      duration: const Duration(milliseconds: 5000),
                     );
                   },
                 ),
