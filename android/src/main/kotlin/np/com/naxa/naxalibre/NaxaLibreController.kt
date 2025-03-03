@@ -6,6 +6,9 @@ import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.graphics.RectF
+import android.view.Gravity
+import androidx.core.app.ActivityCompat
+import androidx.core.view.GravityCompat
 import io.flutter.plugin.common.BinaryMessenger
 import np.com.naxa.naxalibre.parsers.CameraUpdateArgsParser
 import np.com.naxa.naxalibre.parsers.LayerArgsParser
@@ -21,6 +24,7 @@ import org.maplibre.android.geometry.LatLngBounds
 import org.maplibre.android.geometry.ProjectedMeters
 import org.maplibre.android.location.LocationComponentActivationOptions
 import org.maplibre.android.location.LocationComponentOptions
+import org.maplibre.android.location.modes.CameraMode
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.MapView
 import org.maplibre.android.style.expressions.Expression
@@ -1061,13 +1065,31 @@ class NaxaLibreController(
             isAttributionEnabled = uiSettings.attributionEnabled
 
             if (uiSettings.logoGravity != null) {
-                logoGravity = uiSettings.logoGravity.toInt()
+                logoGravity = when (uiSettings.logoGravity) {
+                    "topLeft" -> Gravity.TOP or Gravity.START
+                    "topRight" -> Gravity.TOP or Gravity.END
+                    "bottomLeft" -> Gravity.BOTTOM or Gravity.START
+                    "bottomRight" -> Gravity.BOTTOM or Gravity.END
+                    else -> Gravity.NO_GRAVITY
+                }
             }
             if (uiSettings.compassGravity != null) {
-                compassGravity = uiSettings.compassGravity.toInt()
+                compassGravity = when (uiSettings.compassGravity) {
+                    "topLeft" -> Gravity.TOP or Gravity.START
+                    "topRight" -> Gravity.TOP or Gravity.END
+                    "bottomLeft" -> Gravity.BOTTOM or Gravity.START
+                    "bottomRight" -> Gravity.BOTTOM or Gravity.END
+                    else -> Gravity.NO_GRAVITY
+                }
             }
             if (uiSettings.attributionGravity != null) {
-                attributionGravity = uiSettings.attributionGravity.toInt()
+                attributionGravity = when (uiSettings.attributionGravity) {
+                    "topLeft" -> Gravity.TOP or Gravity.START
+                    "topRight" -> Gravity.TOP or Gravity.END
+                    "bottomLeft" -> Gravity.BOTTOM or Gravity.START
+                    "bottomRight" -> Gravity.BOTTOM or Gravity.END
+                    else -> Gravity.NO_GRAVITY
+                }
             }
 
             isRotateGesturesEnabled = uiSettings.rotateGesturesEnabled
@@ -1150,6 +1172,17 @@ class NaxaLibreController(
                 }
 
             if (!locationEnabled) return
+
+            val shouldRequestPermission =
+                if (params?.containsKey("shouldRequestAuthorizationOrPermission") == true && params["shouldRequestAuthorizationOrPermission"] is Boolean) {
+                    params["shouldRequestAuthorizationOrPermission"] as Boolean
+                } else {
+                    false
+                }
+
+            if (shouldRequestPermission) {
+                // Handle permission request here
+            }
 
             val componentOptionsParams = params?.get("locationComponentOptions") as? Map<*, *>
             val locationEngineRequestParams =
