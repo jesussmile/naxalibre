@@ -31,7 +31,7 @@ abstract class NaxaLibreController {
   /// ```
   Future<void> animateCamera(
     CameraUpdate cameraUpdate, {
-    int? duration,
+    Duration? duration,
   });
 
   /// Method to ease camera
@@ -44,8 +44,12 @@ abstract class NaxaLibreController {
   /// ```
   Future<void> easeCamera(
     CameraUpdate cameraUpdate, {
-    int? duration,
+    Duration? duration,
   });
+
+  /// Method to animate camera to users current location provided by maplibre
+  /// location engine / location manager
+  Future<void> animateCameraToCurrentLocation({Duration duration});
 
   /// Check if a source with the given ID already exists in the map.
   ///

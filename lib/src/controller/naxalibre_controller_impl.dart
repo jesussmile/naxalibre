@@ -40,12 +40,12 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
   @override
   Future<void> animateCamera(
     CameraUpdate cameraUpdate, {
-    int? duration,
+    Duration? duration,
   }) async {
     try {
       await _hostApi.animateCamera({
         ...cameraUpdate.toArgs(),
-        "duration": duration,
+        "duration": duration?.inMilliseconds,
       });
     } catch (e) {
       NaxaLibreLogger.logError("[$runtimeType.animateCamera] => $e");
@@ -55,15 +55,31 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
   @override
   Future<void> easeCamera(
     CameraUpdate cameraUpdate, {
-    int? duration,
+    Duration? duration,
   }) async {
     try {
       await _hostApi.easeCamera({
         ...cameraUpdate.toArgs(),
-        "duration": duration,
+        "duration": duration?.inMilliseconds,
       });
     } catch (e) {
       NaxaLibreLogger.logError("[$runtimeType.easeCamera] => $e");
+    }
+  }
+
+  @override
+  Future<void> animateCameraToCurrentLocation({Duration? duration}) async {
+    try {
+      final location = await lastKnownLocation();
+
+      if (location == null) throw Exception("Location is null");
+
+      final cameraUpdate = CameraUpdateFactory.newLatLng(location);
+      await animateCamera(cameraUpdate, duration: duration);
+    } catch (e) {
+      NaxaLibreLogger.logError(
+        "[$runtimeType.animateCameraToCurrentLocation] => $e",
+      );
     }
   }
 
