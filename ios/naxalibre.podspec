@@ -5,13 +5,13 @@
 Pod::Spec.new do |s|
   s.name             = 'naxalibre'
   s.version          = '0.0.1'
-  s.summary          = 'A new Flutter project.'
+  s.summary          = 'This is Naxalibre, a custom MapLibre plugin proudly developed by @itheamc, to enhance mapping capabilities and streamline geospatial workflows.'
   s.description      = <<-DESC
-A new Flutter project.
+This is Naxalibre, a custom MapLibre plugin proudly developed by @itheamc, to enhance mapping capabilities and streamline geospatial workflows.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/itheamc/naxalibre'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'Amit Chaudhary' => 'itheamc@gmail.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
