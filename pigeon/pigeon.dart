@@ -5,7 +5,7 @@ import 'package:pigeon/pigeon.dart';
   dartPackageName: 'naxalibre',
   dartOptions: DartOptions(),
   kotlinOut:
-      'android/src/main/kotlin/np/com/naxa/naxalibre/pigeon/PigeonGenerated.kt',
+      'android/src/main/kotlin/com/itheamc/naxalibre/pigeon/PigeonGenerated.kt',
   kotlinOptions: KotlinOptions(),
   swiftOut: 'ios/Classes/PigeonGenerated.swift',
   swiftOptions: SwiftOptions(),
@@ -110,12 +110,10 @@ abstract class NaxaLibreHostApi {
 
   bool isFullyLoaded();
 
-  // {"id": "layerId", "max_zoom": 22, "min_zoom": 10, "is_detached": true}
   Map<Object?, Object?> getLayer(String id);
 
   List<Map<Object?, Object?>> getLayers();
 
-  // {"id": "sourceId", "attribution": "thi is attributions", "is_volatile": false}
   Map<Object?, Object?> getSource(String id);
 
   List<Map<Object?, Object?>> getSources();
