@@ -1,5 +1,6 @@
 ## 0.0.1
 
+
 * Seamless integration with MapLibre Map SDK
 * Support for both Android (v11.8.2) and iOS (v6.11.0)
 * Comprehensive layer support (Circle, Line, Fill, Symbol, Raster, Hillshade, Heatmap, Fill Extrusion, Background)
