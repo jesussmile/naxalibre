@@ -28,7 +28,7 @@ And add these permissions to the ```AndroidManifest.xml``` for Android
 And add these permissions to the ```Info.plist``` for iOS
 
 ```
-	<key>NSLocationWhenInUseUsageDescription</key>
+    <key>NSLocationWhenInUseUsageDescription</key>
     <string>We need your location to show it on the map.</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>We need your location to show it on the map.</string>
