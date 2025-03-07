@@ -17,7 +17,7 @@ import org.maplibre.android.style.layers.TransitionOptions
 
 /**
  * `LayerArgsParser` is a utility object that provides functionality for creating and configuring
- * Mapbox GL layers from a map of arguments. It supports various layer types including symbol,
+ * MapLibre GL layers from a map of arguments. It supports various layer types including symbol,
  * fill, line, circle, raster, fill extrusion, heatmap, hillshade, and background layers.
  *
  * This object contains the main function fromArgs used to generate a layer.

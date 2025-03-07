@@ -30,6 +30,17 @@ import org.maplibre.android.location.LocationComponentOptions
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.MapView
 import org.maplibre.android.style.expressions.Expression
+import org.maplibre.android.style.layers.SymbolLayer
+import org.maplibre.android.style.layers.CircleLayer
+import org.maplibre.android.style.layers.FillLayer
+import org.maplibre.android.style.layers.LineLayer
+import org.maplibre.android.style.layers.RasterLayer
+import org.maplibre.android.style.layers.HillshadeLayer
+import org.maplibre.android.style.layers.HeatmapLayer
+import org.maplibre.android.style.layers.BackgroundLayer
+import org.maplibre.android.style.layers.FillExtrusionLayer
+import org.maplibre.android.style.layers.CustomLayer
+
 
 /**
  * Controller for managing the MapLibre GL native map within a Flutter application.
@@ -46,7 +57,7 @@ import org.maplibre.android.style.expressions.Expression
  * @param activityPluginBinding The ActivityPluginBinding instance. It helps us to register request permissions result listeners.
  */
 class NaxaLibreController(
-    binaryMessenger: BinaryMessenger,
+    private val binaryMessenger: BinaryMessenger,
     private val activity: Activity,
     private val libreView: MapView,
     private val libreMap: MapLibreMap,
@@ -73,6 +84,31 @@ class NaxaLibreController(
      * @see libreMap A map component associated with the Libre sensor (if applicable).
      */
     val libreListeners by lazy { NaxaLibreListeners(binaryMessenger, libreView, libreMap) }
+
+    /**
+     * [libreAnnotationsManager] is a lazy-initialized property that provides an instance of [NaxaLibreAnnotationsManager].
+     *
+     * This manager is responsible for handling the creation, modification, and management of annotations
+     * (e.g., markers, polygons, polylines) on the map. It interacts with the Flutter side via the provided
+     * [BinaryMessenger] to communicate changes and receive instructions.
+     *
+     * The manager requires several dependencies to function:
+     *   - [binaryMessenger]: The [BinaryMessenger] used for communication with the Flutter framework.
+     *   - [activity]: The [Activity] context, needed for accessing resources and other system services.
+     *   - [libreView]: The underlying view associated with Libre. (Replace 'Any' type with the correct one).
+     *   - [libreMap]: The [MapView] from osmdroid on which the annotations will be displayed.
+     *
+     * The lazy initialization ensures that the [NaxaLibreAnnotationsManager] is only created when it's first accessed,
+     * optimizing performance by avoiding unnecessary object creation.
+     */
+    private val libreAnnotationsManager by lazy {
+        NaxaLibreAnnotationsManager(
+            binaryMessenger,
+            activity,
+            libreView,
+            libreMap
+        )
+    }
 
     /**
      * Initializes the NaxaLibreHostApi and sets up communication between the native and Flutter sides.
@@ -890,6 +926,17 @@ class NaxaLibreController(
     }
 
     /**
+     * Adds an annotation to the Libre Annotations Manager.
+     *
+     * @param annotation A map containing annotation data where the key represents the annotation property
+     *                   and the value is the corresponding data. Nullable values are allowed.
+     */
+    override fun addAnnotation(annotation: Map<String, Any?>) {
+        libreAnnotationsManager.addAnnotation(annotation)
+    }
+
+
+    /**
      * Removes a layer from the map style by its ID.
      *
      * This function attempts to remove a layer with the given ID from the current map style.
@@ -1011,6 +1058,17 @@ class NaxaLibreController(
      */
     override fun triggerRepaint() {
         libreMap.triggerRepaint()
+    }
+
+    /**
+     * Resets the map's orientation to North.
+     *
+     * This function delegates the task of resetting the map's orientation to
+     * the underlying `libreMap` object. It ensures that the map is displayed
+     * with North pointing upwards.
+     */
+    override fun resetNorth() {
+        libreMap.resetNorth()
     }
 
     /**
