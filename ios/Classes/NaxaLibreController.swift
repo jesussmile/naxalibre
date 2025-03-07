@@ -432,6 +432,10 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
         libreView.style?.addSource(source)
     }
     
+    func addAnnotation(annotation: [String : Any?]) throws {
+    
+    }
+    
     func removeLayer(id: String) throws -> Bool {
         guard let layer = libreView.style?.layer(withIdentifier: id) else {
             return false
@@ -554,6 +558,10 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
     
     func triggerRepaint() throws {
         libreView.triggerRepaint()
+    }
+    
+    func resetNorth() throws {
+        libreView.resetNorth()
     }
     
     private func handleEaseAndAnimateCamera(args: [String: Any?]) throws {
