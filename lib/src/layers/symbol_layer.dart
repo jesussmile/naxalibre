@@ -86,7 +86,7 @@ class SymbolLayerProperties extends LayerProperties {
   /// the final offset in pixels.
   /// When combined with `icon-rotate` the offset will be as if the
   /// rotated direction was up.
-  /// List<Double> or Expression
+  /// List of double or Expression
   /// Default value is listOf(0.0, 0.0)
   final dynamic iconOffset;
 
@@ -133,7 +133,7 @@ class SymbolLayerProperties extends LayerProperties {
 
   /// Size of the additional area added to dimensions determined by
   /// `icon-text-fit`, in clockwise order: top, right, bottom, left.
-  /// List<Double> or Expression
+  /// List of double or Expression
   /// Default value is listOf(0.0, 0.0, 0.0, 0.0)
   final dynamic iconTextFitPadding;
 
@@ -196,7 +196,7 @@ class SymbolLayerProperties extends LayerProperties {
   final dynamic textField;
 
   /// Font stack to use for displaying text.
-  /// List<String> or Expression
+  /// List of string or Expression
   /// Default value is listOf("Open Sans Regular", "Arial Unicode MS Regular")
   final dynamic textFont;
 
@@ -242,7 +242,7 @@ class SymbolLayerProperties extends LayerProperties {
   /// indicate left and up. If used with text-variable-anchor, input values
   /// will be taken as absolute values. Offsets along the x- and y-axis will
   /// be applied automatically based on the anchor position.
-  /// List<double> or Expression
+  /// List of double or Expression
   /// Default is listOf(0.0, 0.0)
   final dynamic textOffset;
 
@@ -298,7 +298,7 @@ class SymbolLayerProperties extends LayerProperties {
   /// onto the next label. Use `text-justify: auto` to choose justification
   /// based on anchor position. To apply an offset, use the `text-radial-offset`
   /// or the two-dimensional `text-offset`.
-  /// List<String> or Expression
+  /// List of string or Expression
   final dynamic textVariableAnchor;
 
   /// The property allows control over a symbol's orientation.
@@ -311,7 +311,7 @@ class SymbolLayerProperties extends LayerProperties {
   /// with line placement, the default text writing mode is either
   /// ['horizontal', 'vertical'] or ['vertical', 'horizontal'], the order
   /// doesn't affect the placement.
-  /// List<String> or Expression
+  /// List of string or Expression
   final dynamic textWritingMode;
 
   /// The color of the icon. This can only be used with [SDF icons]
@@ -362,7 +362,7 @@ class SymbolLayerProperties extends LayerProperties {
   /// Distance that the icon's anchor is moved from its original placement.
   /// Positive values indicate right and down, while negative values indicate
   /// left and up.
-  /// List<double> or Expression
+  /// List of double or Expression
   /// Default value is listOf(0.0, 0.0)
   final dynamic iconTranslate;
 
@@ -427,7 +427,7 @@ class SymbolLayerProperties extends LayerProperties {
   /// Distance that the text's anchor is moved from its original placement.
   /// Positive values indicate right and down, while negative values indicate
   /// left and up.
-  /// List<double> or Expression
+  /// List of double or Expression
   /// Default value is listOf(0.0, 0.0)
   final dynamic textTranslate;
 

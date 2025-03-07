@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+import '../annotations/annotation.dart';
 import '../listeners/naxalibre_listeners.dart';
 import '../models/camera_position.dart';
 import '../models/camera_update.dart';
@@ -98,7 +99,6 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
       final layer = await _hostApi.getLayer(layerId);
       return layer.isNotEmpty;
     } catch (e) {
-      ;
       return false;
     }
   }
@@ -119,6 +119,17 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
       await _hostApi.addSource(source.toArgs());
     } catch (e) {
       NaxaLibreLogger.logError("[$runtimeType.addSource] => $e");
+    }
+  }
+
+  @override
+  Future<void> addAnnotation<T extends Annotation>({
+    required T annotation,
+  }) async {
+    try {
+      await _hostApi.addAnnotation(annotation.toArgs());
+    } catch (e) {
+      NaxaLibreLogger.logError("[$runtimeType.addAnnotation] => $e");
     }
   }
 
@@ -290,6 +301,15 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
       await _hostApi.triggerRepaint();
     } catch (e) {
       NaxaLibreLogger.logError("[$runtimeType.triggerRepaint] => $e");
+    }
+  }
+
+  @override
+  Future<void> resetNorth() async {
+    try {
+      await _hostApi.resetNorth();
+    } catch (e) {
+      NaxaLibreLogger.logError("[$runtimeType.resetNorth] => $e");
     }
   }
 
@@ -869,42 +889,43 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
       _listeners.remove(NaxaLibreListenerKey.onFpsChanged, listener);
 
   @override
-  void clearOnMapRenderedListener() =>
+  void clearOnMapRenderedListeners() =>
       _listeners.clear(NaxaLibreListenerKey.onMapRendered);
 
   @override
-  void clearOnMapLoadedListener() =>
+  void clearOnMapLoadedListeners() =>
       _listeners.clear(NaxaLibreListenerKey.onMapLoaded);
 
   @override
-  void clearOnStyleLoadedListener() =>
+  void clearOnStyleLoadedListeners() =>
       _listeners.clear(NaxaLibreListenerKey.onStyleLoaded);
 
   @override
-  void clearOnMapClickListener() =>
+  void clearOnMapClickListeners() =>
       _listeners.clear(NaxaLibreListenerKey.onMapClick);
 
   @override
-  void clearOnMapLongClickListener() =>
+  void clearOnMapLongClickListeners() =>
       _listeners.clear(NaxaLibreListenerKey.onMapLongClick);
 
   @override
-  void clearOnCameraIdleListener() =>
+  void clearOnCameraIdleListeners() =>
       _listeners.clear(NaxaLibreListenerKey.onCameraIdle);
 
   @override
-  void clearOnCameraMoveListener() =>
+  void clearOnCameraMoveListeners() =>
       _listeners.clear(NaxaLibreListenerKey.onCameraMove);
 
   @override
-  void clearOnRotateListener() =>
+  void clearOnRotateListeners() =>
       _listeners.clear(NaxaLibreListenerKey.onRotate);
 
   @override
-  void clearOnFlingListener() => _listeners.clear(NaxaLibreListenerKey.onFling);
+  void clearOnFlingListeners() =>
+      _listeners.clear(NaxaLibreListenerKey.onFling);
 
   @override
-  void clearOnFpsChangedListener() =>
+  void clearOnFpsChangedListeners() =>
       _listeners.clear(NaxaLibreListenerKey.onFpsChanged);
 
   @override

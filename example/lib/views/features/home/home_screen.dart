@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:naxalibre_example/views/features/annotations_management/annotations_management_screen.dart';
 
 import '../../common/feature_card.dart';
 import '../basic_map_controls/basic_map_controls_screen.dart';
@@ -51,6 +52,18 @@ class HomeScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (_) => const LayerManagementScreen(),
+                  ),
+                ),
+          ),
+          FeatureCard(
+            title: 'Annotation Management',
+            description: 'Add and manage different map annotations',
+            icon: Icons.control_point_duplicate,
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const AnnotationsManagementScreen(),
                   ),
                 ),
           ),

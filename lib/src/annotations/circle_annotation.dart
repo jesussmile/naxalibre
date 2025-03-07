@@ -8,13 +8,16 @@ part of 'annotation.dart';
 /// such as its position, color, radius, and other customizable features.
 ///
 class CircleAnnotation extends Annotation<CircleAnnotationOptions> {
+  /// Type of the annotation
+  ///
+  @override
+  String get type => "Circle";
+
   /// Constructs a `CircleAnnotation` instance.
   ///
   /// [annotationOptions] is required and contains the properties that define
   /// the circle's visual appearance and behavior, such as its center point and style options.
-  CircleAnnotation({
-    required super.annotationOptions,
-  });
+  CircleAnnotation({required super.annotationOptions});
 
   /// Converts the `CircleAnnotation` object into a map representation.
   ///
@@ -23,9 +26,11 @@ class CircleAnnotation extends Annotation<CircleAnnotationOptions> {
   ///
   /// Returns:
   /// - A json map containing the annotation options.
+  /// and annotation type
   @override
   Map<String, dynamic> toArgs() {
     return <String, dynamic>{
+      "type": type,
       "annotationOptions": annotationOptions.toArgs(),
     };
   }
@@ -35,11 +40,12 @@ class CircleAnnotation extends Annotation<CircleAnnotationOptions> {
 /// It contains all the properties for the circle annotation
 /// e.g.
 /// final circleAnnotationOptions = CircleAnnotationOptions(
-///                             circleColor: 'green',
-///                             circleRadius: 10.0,
-///                             circleStrokeWidth: 2.0,
-///                             circleStrokeColor: "#fff",
-///                         );
+///               point: LatLng(27.34, 85.43),
+///               circleColor: 'green',
+///               circleRadius: 10.0,
+///               circleStrokeWidth: 2.0,
+///               circleStrokeColor: "#fff",
+///  );
 class CircleAnnotationOptions extends AnnotationOptions {
   /// Set the Point of the circleAnnotation, which represents the location
   /// of the circleAnnotation on the map
@@ -49,54 +55,99 @@ class CircleAnnotationOptions extends AnnotationOptions {
 
   /// The fill color of the circle.
   /// Accepted data type:
-  /// - String and
-  /// - Int
+  /// - String,
+  /// - Int and
+  /// - Expression
   /// default value is '#0000'
   final dynamic circleColor;
 
+  /// StyleTransition for circleColor
+  /// Accepted data type:
+  /// - StyleTransition
+  final StyleTransition? circleColorTransition;
+
   /// Circle radius.
   /// Accepted data type:
-  /// - Double
-  final double? circleRadius;
+  /// - Double and
+  /// - Expression
+  /// default value is 5.0
+  final dynamic circleRadius;
+
+  /// StyleTransition for circleRadius
+  /// Accepted data type:
+  /// - StyleTransition
+  final StyleTransition? circleRadiusTransition;
 
   /// Amount to blur the circle. 1 blurs the circle such that only the
   /// center point is full opacity.
   /// Accepted data type:
-  /// - Double
+  /// - Double and
+  /// - Expression
   /// default value is 0.0
-  final double? circleBlur;
+  final dynamic circleBlur;
+
+  /// StyleTransition for circleBlur
+  /// Accepted data type:
+  /// - StyleTransition
+  final StyleTransition? circleBlurTransition;
 
   /// The opacity at which the circle will be drawn.
   /// Accepted data type:
-  /// - Double
+  /// - Double and
+  /// - Expression
   /// default value is 1.0
-  final double? circleOpacity;
+  final dynamic circleOpacity;
+
+  /// StyleTransition for circleOpacity
+  /// Accepted data type:
+  /// - StyleTransition
+  final StyleTransition? circleOpacityTransition;
 
   /// The stroke color of the circle.
   /// Accepted data type:
-  /// - String and
-  /// - Int
+  /// - String
+  /// - Int and
+  /// - Expression
+  /// default value is '#000'
   final dynamic circleStrokeColor;
 
-  /// The opacity of the circle's stroke
+  /// StyleTransition for circleStrokeColor
   /// Accepted data type:
-  /// - Double
-  /// default value is 1.0
-  final double? circleStrokeOpacity;
+  /// - StyleTransition
+  final StyleTransition? circleStrokeColorTransition;
 
   /// The width of the circle's stroke. Strokes are placed outside
   /// of the circle-radius.
   /// Accepted data type:
-  /// - Double
+  /// - Double and
+  /// - Expression
   /// default value is 0.0
-  final double? circleStrokeWidth;
+  final dynamic circleStrokeWidth;
+
+  /// StyleTransition for circleStrokeWidth
+  /// Accepted data type:
+  /// - StyleTransition
+  final StyleTransition? circleStrokeWidthTransition;
+
+  /// The opacity of the circle's stroke
+  /// Accepted data type:
+  /// - Double and
+  /// - Expression
+  /// default value is 1.0
+  final dynamic circleStrokeOpacity;
+
+  /// StyleTransition for circleStrokeOpacity
+  /// Accepted data type:
+  /// - StyleTransition
+  final StyleTransition? circleStrokeOpacityTransition;
 
   /// Sorts features in ascending order based on this value.
   /// Features with a higher sort key will appear above features
   /// with a lower sort key.
   /// Accepted data type:
-  /// - Double
-  final double? circleSortKey;
+  /// - Double and
+  /// - Expression
+  final dynamic circleSortKey;
 
   /// Set whether this circleAnnotation should be draggable, meaning it can be
   /// dragged across the screen when touched and moved.
@@ -105,70 +156,121 @@ class CircleAnnotationOptions extends AnnotationOptions {
   final bool draggable;
 
   /// Set the arbitrary json data of the annotation.
-  /// Accepted data type - Map<String, dynamic>
-  /// default value is <String, dynamic>{}
+  /// Accepted data type - map of string, dynamic
+  /// default value is null
   final Map<String, dynamic>? data;
 
   /// Constructor
   CircleAnnotationOptions({
     required this.point,
     this.circleColor,
+    this.circleColorTransition,
     this.circleRadius,
+    this.circleRadiusTransition,
     this.circleBlur,
+    this.circleBlurTransition,
     this.circleOpacity,
+    this.circleOpacityTransition,
     this.circleStrokeColor,
-    this.circleStrokeOpacity,
+    this.circleStrokeColorTransition,
     this.circleStrokeWidth,
+    this.circleStrokeWidthTransition,
+    this.circleStrokeOpacity,
+    this.circleStrokeOpacityTransition,
     this.circleSortKey,
     this.draggable = false,
     this.data,
   });
 
-  /// Method to proceeds the circle annotation options for native
+  /// Method to proceeds the circle annotation options
+  ///
   @override
   Map<String, dynamic>? toArgs() {
     final args = <String, dynamic>{};
 
+    // Adding point
     args['point'] = point.toArgs();
 
-    if (circleColor != null) {
-      args['circleColor'] = circleColor;
-    }
-
-    if (circleRadius != null) {
-      args['circleRadius'] = circleRadius;
-    }
-
-    if (circleBlur != null) {
-      args['circleBlur'] = circleBlur;
-    }
-
-    if (circleOpacity != null) {
-      args['circleOpacity'] = circleOpacity;
-    }
-
-    if (circleStrokeColor != null) {
-      args['circleStrokeColor'] = circleStrokeColor;
-    }
-
-    if (circleStrokeWidth != null) {
-      args['circleStrokeWidth'] = circleStrokeWidth;
-    }
-
-    if (circleStrokeOpacity != null) {
-      args['circleStrokeOpacity'] = circleStrokeOpacity;
-    }
-
-    if (circleSortKey != null) {
-      args['circleSortKey'] = circleSortKey;
-    }
-
-    if (data != null) {
-      args['data'] = jsonEncode(data);
-    }
-
+    // Adding draggable
     args['draggable'] = draggable;
 
+    // Adding data
+    if (data != null) {
+      args['data'] = data;
+    }
+
+    // Layout properties
+    final layoutArgs = _circleLayoutArgs();
+    args['layout'] = layoutArgs;
+
+    // Paint properties
+    final paintArgs = _circlePaintArgs();
+    args['paint'] = paintArgs;
+
+    // Transition properties
+    final transitionsArgs = _circleTransitionsArgs();
+    args['transition'] = transitionsArgs;
+
     return args.isNotEmpty ? args : null;
+  }
+
+  /// Method to create layout properties
+  ///
+  Map<String, dynamic> _circleLayoutArgs() {
+    final layoutArgs = <String, dynamic>{};
+
+    void insert(String key, dynamic value) {
+      if (value != null) {
+        layoutArgs[key] = value is List ? jsonEncode(value) : value;
+      }
+    }
+
+    insert('circle-sort-key', circleSortKey);
+
+    return layoutArgs;
+  }
+
+  /// Method to create paint properties
+  ///
+  Map<String, dynamic> _circlePaintArgs() {
+    final paintArgs = <String, dynamic>{};
+
+    void insert(String key, dynamic value) {
+      if (value != null) {
+        paintArgs[key] = value is List ? jsonEncode(value) : value;
+      }
+    }
+
+    insert('circle-color', circleColor);
+    insert('circle-radius', circleRadius);
+    insert('circle-blur', circleBlur);
+    insert('circle-opacity', circleOpacity);
+    insert('circle-stroke-color', circleStrokeColor);
+    insert('circle-stroke-width', circleStrokeWidth);
+    insert('circle-stroke-opacity', circleStrokeOpacity);
+
+    return paintArgs;
+  }
+
+  /// Method to create transitions properties
+  ///
+  Map<String, dynamic> _circleTransitionsArgs() {
+    final transitionsArgs = <String, dynamic>{};
+
+    void insert(String key, dynamic transition) {
+      if (transition != null) {
+        transitionsArgs[key] = transition.toArgs();
+      }
+    }
+
+    insert('circle-color-transition', circleColorTransition);
+    insert('circle-radius-transition', circleRadiusTransition);
+    insert('circle-blur-transition', circleBlurTransition);
+    insert('circle-opacity-transition', circleOpacityTransition);
+    insert('circle-stroke-color-transition', circleStrokeColorTransition);
+    insert('circle-stroke-width-transition', circleStrokeWidthTransition);
+    insert('circle-stroke-opacity-transition', circleStrokeOpacityTransition);
+
+    return transitionsArgs;
   }
 }

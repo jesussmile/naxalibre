@@ -126,7 +126,7 @@ class FillLayerProperties extends LayerProperties {
   /// The geometry's offset. Values are x, y where negatives indicate
   /// left and up, respectively.
   /// Accepted data type:
-  /// - List<Double> and
+  /// - List of double and
   /// - Expression
   final dynamic fillTranslate;
 

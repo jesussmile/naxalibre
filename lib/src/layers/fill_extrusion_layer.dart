@@ -176,7 +176,7 @@ class FillExtrusionLayerProperties extends LayerProperties {
   /// The geometry's offset. Values are [x, y] where negatives indicate
   /// left and up (on the flat plane), respectively.
   /// Accepted data type:
-  /// - List<double> and
+  /// - List of double and
   /// - Expression
   /// default value is [0.0, 0.0]
   final dynamic fillExtrusionTranslate;

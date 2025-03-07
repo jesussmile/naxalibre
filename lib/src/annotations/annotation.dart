@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import '../enums/enums.dart';
 import '../models/latlng.dart';
+import '../models/style_transition.dart';
 import '../utils/naxalibre_logger.dart';
 
 part 'annotation_options.dart';
@@ -33,6 +34,10 @@ part 'polyline_annotation.dart';
 ///   object into a json map. The Map will represent the annotation in a
 ///   suitable format for further processing or use.
 abstract class Annotation<T> {
+  /// Type of the annotation
+  ///
+  String get type;
+
   /// AnnotationOptions
   /// It contains the properties that are needed to build and create an annotation.
   final T annotationOptions;
@@ -41,9 +46,7 @@ abstract class Annotation<T> {
   ///
   /// [annotationOptions] - The specific properties or options needed to build the annotation.
   /// This is a required parameter, and its type is determined by the generic type [T].
-  Annotation({
-    required this.annotationOptions,
-  });
+  Annotation({required this.annotationOptions});
 
   /// Method to convert the Annotation object to a Map.
   ///

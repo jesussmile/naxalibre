@@ -98,7 +98,7 @@ class LineLayerProperties extends LayerProperties {
   /// won't render dashed lines to the expected scale. Also note that
   /// zoom-dependent expressions will be evaluated only at integer zoom levels.
   /// Accepted data type:
-  /// - List<Double> and
+  /// - List of double and
   /// - Expression
   final dynamic lineDashArray;
 
@@ -208,7 +208,7 @@ class LineLayerProperties extends LayerProperties {
   /// The geometry's offset. Values are x, y where negatives indicate
   /// left and up, respectively
   /// Accepted data type:
-  /// - List<Double> and
+  /// - List of double and
   /// - Expression
   /// default value is [0.0, 0.0]
   final dynamic lineTranslate;
@@ -229,7 +229,7 @@ class LineLayerProperties extends LayerProperties {
   /// to make a route vanishing effect. The line trim-off offset is based
   /// on the whole line range 0.0, 1.0.
   /// Accepted data type:
-  /// - List<Double> and
+  /// - List of double and
   /// - Expression
   /// default value is [0.0, 0.0]
   final dynamic lineTrimOffset;
