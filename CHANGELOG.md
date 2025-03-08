@@ -1,3 +1,9 @@
+## 0.0.3
+
+* Added method reset north
+* Added support for polygons
+* Shown attributions from sources in Attribution dialog
+
 ## 0.0.2
 
 * Fixes bugs related to queryRenderedFeatures method

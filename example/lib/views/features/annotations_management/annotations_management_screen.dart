@@ -31,22 +31,22 @@ class _LayerManagementScreenState
               AnnotationButton(
                 label: "Add Circle Annotation",
                 icon: Icons.circle,
-                onPressed: () => _addCircleLayer(),
+                onPressed: () => _addCircleAnnotation(),
               ),
               AnnotationButton(
                 label: "Add Polyline Annotation",
                 icon: Icons.polyline,
-                onPressed: () => _addPolylineLayer(),
+                onPressed: () => _addPolylineAnnotation(),
               ),
               AnnotationButton(
                 label: "Add Polygon Annotation",
                 icon: Icons.hexagon_outlined,
-                onPressed: () {},
+                onPressed: () => _addPolygonAnnotation(),
               ),
               AnnotationButton(
                 label: "Add Point Annotation",
                 icon: Icons.location_on_rounded,
-                onPressed: () {},
+                onPressed: () => _addPointAnnotation(),
               ),
             ],
           ),
@@ -55,10 +55,10 @@ class _LayerManagementScreenState
     );
   }
 
-  Future<void> _addCircleLayer() async {
+  Future<void> _addCircleAnnotation() async {
     await controller?.addAnnotation<CircleAnnotation>(
       annotation: CircleAnnotation(
-        annotationOptions: CircleAnnotationOptions(
+        options: CircleAnnotationOptions(
           point: LatLng(27.741712, 85.331033),
           circleColor: "red",
           circleStrokeColor: "white",
@@ -81,10 +81,10 @@ class _LayerManagementScreenState
     ).showSnackBar(const SnackBar(content: Text('Circle annotation added')));
   }
 
-  Future<void> _addPolylineLayer() async {
+  Future<void> _addPolylineAnnotation() async {
     await controller?.addAnnotation<PolylineAnnotation>(
       annotation: PolylineAnnotation(
-        annotationOptions: PolylineAnnotationOptions(
+        options: PolylineAnnotationOptions(
           points: [LatLng(27.741712, 85.331033), LatLng(27.7420, 85.3412)],
           lineColor: "red",
           lineWidth: 3.75,
@@ -97,5 +97,48 @@ class _LayerManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Polyline annotation added')));
+  }
+
+  Future<void> _addPolygonAnnotation() async {
+    await controller?.addAnnotation<PolygonAnnotation>(
+      annotation: PolygonAnnotation(
+        options: PolygonAnnotationOptions(
+          points: [
+            [
+              LatLng(27.741712, 85.331033),
+              LatLng(27.7420, 85.3412),
+              LatLng(27.7525, 85.3578),
+            ],
+          ],
+          fillColor: "red",
+          fillOpacity: 0.15,
+          fillOutlineColor: "blue",
+        ),
+      ),
+    );
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Polygon annotation added')));
+  }
+
+  Future<void> _addPointAnnotation() async {
+    await controller?.addAnnotation<PointAnnotation>(
+      annotation: PointAnnotation(
+        image: NetworkStyleImage(
+          imageId: "pointImageId",
+          url:
+              "https://www.cp-desk.com/wp-content/uploads/2019/02/map-marker-free-download-png.png",
+        ),
+        options: PointAnnotationOptions(
+          point: LatLng(27.7525, 85.3578),
+          iconSize: 0.1,
+        ),
+      ),
+    );
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Point annotation added')));
   }
 }
