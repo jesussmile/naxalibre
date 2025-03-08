@@ -14,9 +14,9 @@ class PolygonAnnotation extends Annotation<PolygonAnnotationOptions> {
 
   /// Constructs a `PolygonAnnotation` instance.
   ///
-  /// [annotationOptions] is required and defines the properties of the polygon annotation,
+  /// [options] is required and defines the properties of the polygon annotation,
   /// such as the points that form the polygon, its fill color, stroke color, and other style properties.
-  PolygonAnnotation({required super.annotationOptions});
+  PolygonAnnotation({required super.options});
 
   /// Converts the `PolygonAnnotation` object to a map representation.
   ///
@@ -29,7 +29,7 @@ class PolygonAnnotation extends Annotation<PolygonAnnotationOptions> {
   Map<String, dynamic> toArgs() {
     return <String, dynamic>{
       "type": type,
-      "annotationOptions": annotationOptions.toArgs(),
+      "options": options.toArgs(),
     };
   }
 }

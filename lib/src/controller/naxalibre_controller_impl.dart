@@ -127,6 +127,19 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
     required T annotation,
   }) async {
     try {
+      if (annotation is PointAnnotation) {
+        NaxaLibreLogger.logMessage("[$runtimeType.addAnnotation] => ${annotation.type}");
+
+        final isExist = await isStyleImageExist(annotation.image.imageId);
+
+        if (!isExist) {
+          NaxaLibreLogger.logMessage("[$runtimeType.addAnnotation] => 11");
+          await addStyleImage(image: annotation.image);
+        }
+      }
+      NaxaLibreLogger.logMessage("[$runtimeType.addAnnotation] => 12");
+
+
       await _hostApi.addAnnotation(annotation.toArgs());
     } catch (e) {
       NaxaLibreLogger.logError("[$runtimeType.addAnnotation] => $e");

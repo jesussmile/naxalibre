@@ -51,13 +51,13 @@ object AnnotationArgsParser {
         val id = System.currentTimeMillis() + args.hashCode()
 
         // Creating layerId based on generated id
-        val layerId = "layer_$id"
+        val layerId = "libre_annotation_layer_$id"
 
         // Creating source id based on generated id
-        val sourceId = "source_$id"
+        val sourceId = "libre_annotation_source_$id"
 
         // Getting the annotation properties from the arguments
-        val annotationOptions = args["annotationOptions"] as Map<*, *>?
+        val annotationOptions = args["options"] as Map<*, *>?
 
         // Getting the paint properties from the annotation options
         val paintArgs = annotationOptions?.get("paint") as Map<*, *>?
@@ -71,18 +71,21 @@ object AnnotationArgsParser {
         // Creating the layer based on the type
         val layer = when (type) {
             AnnotationType.Symbol -> {
+                val modifiedLayoutArgs = layoutArgs?.toMutableMap()
+                modifiedLayoutArgs?.set("icon-image", "${annotationOptions?.get("icon-image")}")
+
                 SymbolLayer(layerId, sourceId).apply {
                     when {
-                        layoutArgs != null && paintArgs != null -> {
+                        modifiedLayoutArgs != null && paintArgs != null -> {
                             setProperties(
                                 *layoutArgsToProperties(
-                                    layoutArgs
+                                    modifiedLayoutArgs
                                 ).toTypedArray(), *paintArgsToProperties(paintArgs).toTypedArray()
                             )
                         }
 
-                        layoutArgs != null -> {
-                            setProperties(*layoutArgsToProperties(layoutArgs).toTypedArray())
+                        modifiedLayoutArgs != null -> {
+                            setProperties(*layoutArgsToProperties(modifiedLayoutArgs).toTypedArray())
                         }
 
                         paintArgs != null -> {

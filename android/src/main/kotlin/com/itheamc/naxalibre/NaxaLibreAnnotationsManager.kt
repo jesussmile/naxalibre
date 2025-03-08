@@ -178,9 +178,34 @@ class NaxaLibreAnnotationsManager(
     }
 
 
+    /**
+     * Adds a circle annotation to the map.
+     *
+     * This function adds a circle to the map at a specified point with optional
+     * styling and data. It handles the creation of the GeoJsonSource and CircleLayer
+     * and adds them to the map's style.  It also supports updating existing circle annotations by
+     * removing and re-adding them if they already exist. The function stores the created annotation
+     * in the `circleAnnotations` list.
+     *
+     * @param args A map containing the arguments for the circle annotation. It should contain the following:
+     *   - `options`: A map containing the options for the circle.
+     *   - `point`: (Required) A list of two numbers representing the longitude and latitude of the circle's center.
+     *              Example: `listOf(longitude, latitude)` where longitude and latitude are doubles.
+     *   - `data`: (Optional) A map of string key-value pairs to associate with the circle. This data can be used
+     *             later for interacting with the circle.
+     *   - `draggable`: (Optional) A boolean indicating whether the circle can be dragged by the user. Defaults to `false`.
+     *   -  Other options as defined by `AnnotationArgsParser.parseArgs<CircleLayer>`: Refer to documentation for `AnnotationArgsParser`
+     *      and `CircleLayer` to learn about other possible options. These include styling properties like `circle-color`,
+     *      `circle-radius`, etc.
+     * @throws Exception If the `point` argument is missing or invalid.
+     *   - "Point argument is required": If the `point` key is not present in the `options` map.
+     *   - "Point argument must be a list of two numbers": If the `point` list contains fewer than two numbers, or contains non-numeric elements.
+     * @throws Exception if `AnnotationArgsParser.parseArgs` throws an error
+     *
+     */
     private fun addCircleAnnotation(args: Map<*, *>?) {
 
-        val optionsArgs = args?.get("annotationOptions") as? Map<*, *>
+        val optionsArgs = args?.get("options") as? Map<*, *>
 
         val pointArg =
             optionsArgs?.get("point") as? List<*> ?: throw Exception("Point argument is required")
@@ -217,8 +242,28 @@ class NaxaLibreAnnotationsManager(
         circleAnnotations.add(annotation)
     }
 
+    /**
+     * Adds a polyline annotation to the map.
+     *
+     * This function takes a map of arguments, extracts the necessary data to define a polyline,
+     * and then adds it as an annotation to the Mapbox map. The polyline is represented by a
+     * sequence of geographic points. The function also supports custom data and draggable
+     * properties for the polyline. It handles the addition and removal of layers and sources
+     * if they already exist to avoid duplicates.
+     *
+     * @param args A map containing the necessary arguments for creating the polyline annotation.
+     *   - `options` (Map): Contains the configuration for the polyline.
+     *   - `points` (List<List<Double>>): A list of point coordinates. Each point is represented
+     *        as a list of two doubles: [latitude, longitude]. **This is a required argument**.
+     *   - `data` (Map<String, Any>?): Optional custom data to be associated with the polyline.
+     *   - `draggable` (Boolean?): Optional. Indicates whether the polyline should be draggable.
+     *        Defaults to `false`.
+     *   - other keys are used to config the [LineLayer] annotation, such as `"id"`, `"sourceId"`, `"style"`
+     *        and other supported properties from [LineLayer]
+     *
+     */
     private fun addPolylineAnnotation(args: Map<*, *>?) {
-        val optionsArgs = args?.get("annotationOptions") as? Map<*, *>
+        val optionsArgs = args?.get("options") as? Map<*, *>
 
         val pointsArg =
             optionsArgs?.get("points") as? List<*> ?: throw Exception("Points argument is required")
@@ -261,8 +306,31 @@ class NaxaLibreAnnotationsManager(
         polylineAnnotations.add(annotation)
     }
 
+    /**
+     * Adds a polygon annotation to the map.
+     *
+     * This function takes a map of arguments to define the polygon's properties,
+     * including its vertices, associated data, and draggable state. It creates
+     * a new polygon layer on the map using the provided information. If a layer or source with the same id
+     * already exists it will remove it before add the new one.
+     *
+     * @param args A map containing the arguments for the polygon annotation.
+     *   It should contain the following keys within the "options" nested map:
+     *   - points: (Required) A list of lists of doubles, representing the
+     *               coordinates of the polygon's vertices. Each inner list
+     *               should contain two doubles: [longitude, latitude].
+     *               Example: `[[10.0, 20.0], [30.0, 40.0], [50.0, 20.0]]`
+     *               The points must be in longitude, latitude order.
+     *               The list of points must be a closed polygon
+     *   - data: (Optional) A map of key-value pairs representing custom
+     *             data associated with the polygon. Keys should be strings.
+     *   - draggable: (Optional) A boolean indicating whether the polygon
+     *                  should be draggable. Defaults to `false`.
+     *   - and the rest of the argument from [AnnotationArgsParser.parseArgs]
+     *
+     */
     private fun addPolygonAnnotation(args: Map<*, *>?) {
-        val optionsArgs = args?.get("annotationOptions") as? Map<*, *>
+        val optionsArgs = args?.get("options") as? Map<*, *>
 
         val pointsArg =
             optionsArgs?.get("points") as? List<*> ?: throw Exception("Points argument is required")
@@ -309,8 +377,26 @@ class NaxaLibreAnnotationsManager(
         polygonAnnotations.add(annotation)
     }
 
+    /**
+     * Adds a symbol annotation to the map.
+     *
+     * This function takes a map of arguments, extracts necessary information,
+     * constructs a symbol annotation object, and adds it to the map's style.
+     * It handles creating or updating the necessary source and layer for the
+     * annotation and manages a collection of all symbol annotations.
+     *
+     * @param args A map containing the arguments for the symbol annotation.
+     *             If "options" is null or not a map, it's ignored.
+     *             If "point" is not provided in "options" or it's not a list of two numbers, an exception will be thrown.
+     *             If "data" is not provided, it defaults to an empty map.
+     *             If "draggable" is not provided, it defaults to false.
+     * @throws Exception Throws an exception if:
+     *                  - The "point" argument is missing.
+     *                  - The "point" argument is not a list of two numbers.
+     *
+     */
     private fun addSymbolAnnotation(args: Map<*, *>?) {
-        val optionsArgs = args?.get("annotationOptions") as? Map<*, *>
+        val optionsArgs = args?.get("options") as? Map<*, *>
 
         val pointArg =
             optionsArgs?.get("point") as? List<*> ?: throw Exception("Point argument is required")

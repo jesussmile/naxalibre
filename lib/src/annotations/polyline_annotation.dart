@@ -14,9 +14,9 @@ class PolylineAnnotation extends Annotation<PolylineAnnotationOptions> {
 
   /// Constructs a `PolylineAnnotation` instance.
   ///
-  /// [annotationOptions] is required and defines the properties of the polyline annotation,
+  /// [options] is required and defines the properties of the polyline annotation,
   /// such as the points that form the polyline, its color, width, and other style properties.
-  PolylineAnnotation({required super.annotationOptions});
+  PolylineAnnotation({required super.options});
 
   /// Converts the `PolylineAnnotation` object to a map representation.
   ///
@@ -29,7 +29,7 @@ class PolylineAnnotation extends Annotation<PolylineAnnotationOptions> {
   Map<String, dynamic> toArgs() {
     return <String, dynamic>{
       "type": type,
-      "annotationOptions": annotationOptions.toArgs(),
+      "options": options.toArgs(),
     };
   }
 }

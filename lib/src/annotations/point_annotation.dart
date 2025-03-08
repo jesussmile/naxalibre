@@ -10,54 +10,18 @@ class PointAnnotation extends Annotation<PointAnnotationOptions> {
   @override
   String get type => "Symbol";
 
-  /// The URL of the icon to display on the map.
-  ///
-  /// Example: `https://myicons.com/icon/marker.png`
-  ///
-  /// If `iconImage`, `iconUrl`, and `iconPath` all are provided, the icon referenced
-  /// from the `iconImage` will be displayed.
-  final String? iconUrl;
-
-  /// The asset path of the icon to display on the map.
-  ///
-  /// Example: `assets/icons/point_icon.png`
-  ///
-  /// If `iconImage`, `iconUrl`, and `iconPath` all are provided, the icon referenced
-  /// from the `iconImage` will be displayed.
-  final String? iconPath;
-
-  /// The ID or name of the image added through the style image.
-  ///
-  /// To use this, the style image must be added using:
-  /// ```dart
-  /// await _controller.addStyleImage<NetworkStyleImage>(
-  ///   image: NetworkStyleImage(
-  ///     imageId: "my_icon",
-  ///     url: "https://example.com/icon.png",
-  ///   ),
-  /// );
-  /// ```
-  /// In this case, `iconImage` would be `"my_icon"`.
-  ///
-  /// If `iconImage`, `iconUrl`, and `iconPath` are all provided, the icon referenced
-  /// from the `iconImage` will be displayed.
-  final String? iconImage;
+  /// The `image` property is required to set the icon image to the
+  /// `PointAnnotation`. It can be either a [NetworkStyleImage] or an
+  /// [AssetStyleImage].
+  final StyleImage image;
 
   /// Constructs a `PointAnnotation` instance.
   ///
-  /// [iconUrl] or [iconPath] or [iconImage] must be provided to specify the icon.
+  /// [image] A style image to use as the icon for the annotation.
+  /// It may me [NetworkStyleImage] or [AssetStyleImage]
+  /// [options] The options for the annotation.
   ///
-  /// Throws an `AssertionError` if none of the icon properties (`iconUrl`, `iconPath`,
-  /// or `iconImage`) are provided.
-  PointAnnotation({
-    this.iconUrl,
-    this.iconPath,
-    this.iconImage,
-    required super.annotationOptions,
-  }) : assert(
-         iconUrl != null || iconPath != null || iconImage != null,
-         "Please provide iconUrl or iconPath or iconImage.",
-       );
+  PointAnnotation({required this.image, required super.options});
 
   /// Converts the `PointAnnotation` object into a map representation.
   ///
@@ -70,53 +34,8 @@ class PointAnnotation extends Annotation<PointAnnotationOptions> {
   Map<String, dynamic> toArgs() {
     return <String, dynamic>{
       "type": type,
-      "annotationOptions": annotationOptions.toArgs(),
+      "options": {...?options.toArgs(), 'icon-image': image.imageId},
     };
-  }
-
-  /// Retrieves the byte array representation of the icon.
-  ///
-  /// If `iconImage` is provided, this method returns `null` since the icon
-  /// is already available in the style images.
-  ///
-  /// If `iconUrl` is provided, this method downloads the icon from the given URL.
-  ///
-  /// If `iconPath` is provided, this method loads the icon from the asset bundle.
-  ///
-  /// Returns:
-  /// - A `Future<Uint8List?>` containing the byte array of the icon, or `null`
-  ///   if an error occurs or the icon is not found.
-  Future<Uint8List?> getByteArray() async {
-    if (iconImage != null && iconImage!.isNotEmpty) return null;
-
-    try {
-      if (iconPath == null || iconPath!.trim().isEmpty) {
-        if (iconUrl == null ||
-            iconUrl!.trim().isEmpty ||
-            !iconUrl!.contains("http")) {
-          return null;
-        }
-
-        final uri = Uri.tryParse(iconUrl!.trim());
-
-        if (uri == null) return null;
-
-        final client = HttpClient();
-        final request = await client.getUrl(uri);
-        final response = await request.close();
-
-        final list = await response.first;
-
-        return Uint8List.fromList(list);
-      }
-
-      final bytes = await rootBundle.load(iconPath!.trim());
-      final list = bytes.buffer.asUint8List();
-      return list;
-    } on Exception catch (e, _) {
-      NaxaLibreLogger.logError("[PointAnnotation][getByteArray] => $e");
-    }
-    return null;
   }
 }
 
@@ -149,10 +68,6 @@ class PointAnnotationOptions extends AnnotationOptions {
   /// IconAnchor or Expression
   /// Default is IconAnchor.center
   final dynamic iconAnchor;
-
-  /// Name of image in sprite to use for drawing an image background.
-  /// String or Expression
-  final dynamic iconImage;
 
   /// If true, the icon may be flipped to prevent it
   /// from being rendered upside-down.
@@ -456,8 +371,6 @@ class PointAnnotationOptions extends AnnotationOptions {
   PointAnnotationOptions({
     required this.point,
     this.iconAnchor,
-
-    this.iconImage,
     this.iconKeepUpright,
     this.iconOffset,
     this.iconOptional,
@@ -555,7 +468,6 @@ class PointAnnotationOptions extends AnnotationOptions {
       }
     }
 
-    insert('icon-image', iconImage);
     insert('icon-keep-upright', iconKeepUpright);
     insert('icon-optional', iconOptional);
     insert('icon-padding', iconPadding);

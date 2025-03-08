@@ -15,9 +15,9 @@ class CircleAnnotation extends Annotation<CircleAnnotationOptions> {
 
   /// Constructs a `CircleAnnotation` instance.
   ///
-  /// [annotationOptions] is required and contains the properties that define
+  /// [options] is required and contains the properties that define
   /// the circle's visual appearance and behavior, such as its center point and style options.
-  CircleAnnotation({required super.annotationOptions});
+  CircleAnnotation({required super.options});
 
   /// Converts the `CircleAnnotation` object into a map representation.
   ///
@@ -31,7 +31,7 @@ class CircleAnnotation extends Annotation<CircleAnnotationOptions> {
   Map<String, dynamic> toArgs() {
     return <String, dynamic>{
       "type": type,
-      "annotationOptions": annotationOptions.toArgs(),
+      "options": options.toArgs(),
     };
   }
 }
