@@ -73,25 +73,6 @@ class NaxaLibreAnnotationsManager(
         val draggable: Boolean = false,
     ) where T : Layer
 
-    // init {
-    //     libreMap.uiSettings.setAllGesturesEnabled(false)
-    //     libreView.setOnTouchListener { v, event ->
-    //         when (event.action) {
-    //             MotionEvent.ACTION_DOWN -> {
-    //                 Log.d("AMIR", "Touch started at: ${event.x}, ${event.y}")
-    //             }
-    //             MotionEvent.ACTION_MOVE -> {
-    //                 Log.d("AMIR", "Touch moved to: ${event.x}, ${event.y}")
-    //             }
-    //             MotionEvent.ACTION_UP -> {
-    //                 Log.d("AMIR", "Touch ended at: ${event.x}, ${event.y}")
-    //                 v.performClick()
-    //             }
-    //         }
-    //         true
-    //     }
-    // }
-
     /**
      * A list of annotations representing circles drawn on the map.
      *
