@@ -34,7 +34,7 @@ struct LineLayerArgsParser {
 
 /// Extension helper for the `MLNLineStyleLayer`
 ///
-fileprivate extension MLNLineStyleLayer {
+extension MLNLineStyleLayer {
     
     // MARK: Configure Line Layer Args
     func configureLayerArgs(_ properties: [String: Any?]?) -> MLNLineStyleLayer {

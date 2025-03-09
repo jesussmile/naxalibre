@@ -255,31 +255,7 @@ class NaxaLibreListeners: NSObject, MLNMapViewDelegate, UIGestureRecognizerDeleg
                     .parseArgs(locationSettingArgs)
                     .locationComponentOptions
                 
-                if let pulseColor = UIColor.from(value: styleOptions.pulseColor) {
-                    style.haloFillColor = pulseColor
-                }
-                
-                if let foregroundTintColor = UIColor.from(value: styleOptions.foregroundTintColor) {
-                    style.puckFillColor = foregroundTintColor
-                }
-                
-                if let backgroundTintColor = UIColor.from(value: styleOptions.backgroundTintColor) {
-                    style.puckShadowColor = backgroundTintColor
-                }
-                
-                if let bearingTintColor = UIColor.from(value: styleOptions.bearingTintColor) {
-                    style.puckArrowFillColor = bearingTintColor
-                }
-                
-                if #available(iOS 14, *) {
-                    if let accuracyColor = UIColor.from(value: styleOptions.accuracyColor) {
-                        style.approximateHaloFillColor = accuracyColor
-                    }
-                    
-                    if let accuracyAlpha = styleOptions.accuracyAlpha {
-                        style.approximateHaloOpacity = accuracyAlpha
-                    }
-                }
+                style.applyStyle(styleOptions)
             }
         }
         

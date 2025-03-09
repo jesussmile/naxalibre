@@ -34,7 +34,7 @@ struct SymbolLayerArgsParser {
 
 /// Extension helper for the `MLNSymbolStyleLayer`
 ///
-fileprivate extension MLNSymbolStyleLayer {
+ extension MLNSymbolStyleLayer {
     
     // MARK: Configure Layer Args
     func configureLayerArgs(_ properties: [String: Any?]?) -> MLNSymbolStyleLayer {

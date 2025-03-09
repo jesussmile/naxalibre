@@ -32,7 +32,7 @@ struct CircleLayerArgsParser {
 
 /// Extension helper for the `MLNCircleStyleLayer`
 ///
-fileprivate extension MLNCircleStyleLayer {
+extension MLNCircleStyleLayer {
     
     // MARK: Configure Symbol Layer Args
     func configureLayerArgs(_ properties: [String: Any?]?) -> MLNCircleStyleLayer {

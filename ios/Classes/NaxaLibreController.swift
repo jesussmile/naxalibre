@@ -17,6 +17,12 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
     // MARK: NaxaLibreListeners
     public let naxaLibreListeners: NaxaLibreListeners
     
+    // MARK: NaxaLibreAnnotationsManager
+    private lazy var libreAnnotationsManager: NaxaLibreAnnotationsManager = NaxaLibreAnnotationsManager(
+        binaryMessenger: binaryMessenger,
+        libreView: libreView
+    )
+    
     // MARK: Init method for constructing instance of this class
     init(binaryMessenger: FlutterBinaryMessenger, libreView: MLNMapView, args: Any?) {
         self.binaryMessenger = binaryMessenger
@@ -433,7 +439,7 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
     }
     
     func addAnnotation(annotation: [String : Any?]) throws {
-    
+        try libreAnnotationsManager.addAnnotation(args: annotation)
     }
     
     func removeLayer(id: String) throws -> Bool {
