@@ -47,6 +47,93 @@ class LayerArgsParser {
         
         return nil
     }
+    
+    
+    /// Extracts a set of arguments from a given Layer object.
+    ///
+    /// This function examines the provided `Layer` and returns a dictionary containing
+    /// key-value pairs representing the layer's properties. The dictionary includes:
+    ///
+    /// - **Common Properties (for all layer types):**
+    ///   - `"id"`: The unique identifier of the layer.
+    ///   - `"min_zoom"`: The minimum zoom level at which the layer is visible.
+    ///   - `"max_zoom"`: The maximum zoom level at which the layer is visible.
+    ///
+    /// - **Layer-Specific Properties:**
+    ///   - `"type"`: A string describing the layer type (e.g., "fill-layer", "line-layer").
+    ///   - `"sourceId"`: The ID of the data source used by the layer. This may be nil for some layers (e.g., BackgroundLayer).
+    ///   - `"source_layer"`: The specific layer within the data source that this layer uses. This may be nil for some layers.
+    ///
+    /// The function uses a switch statement to handle different layer types, adding
+    /// type-specific information to the resulting dictionary. If the layer type is unknown,
+    /// it defaults to a type of "unknown" and nil source information.
+    ///
+    /// @param layer The Layer object to extract arguments from.
+    /// @return A dictionary containing the extracted arguments as key-value pairs.
+    ///
+    static func extractArgsFromLayer(layer: MLNStyleLayer) -> [AnyHashable?: Any?] {
+        var args: [AnyHashable?: Any?] = [:]
+        
+        // Common properties for all layers
+        args["id"] = layer.identifier
+        args["minzoom"] = layer.minimumZoomLevel
+        args["maxzoom"] = layer.maximumZoomLevel
+        
+        // Layer-specific properties
+        switch layer {
+            case let fillLayer as MLNFillStyleLayer:
+                args["type"] = NaxaLibreLayerType.fill.rawValue
+                args["sourceId"] = fillLayer.sourceIdentifier
+                args["sourceLayer"] = fillLayer.sourceLayerIdentifier
+                
+            case let lineLayer as MLNLineStyleLayer:
+                args["type"] = NaxaLibreLayerType.line.rawValue
+                args["sourceId"] = lineLayer.sourceIdentifier
+                args["sourceLayer"] = lineLayer.sourceLayerIdentifier
+                
+            case let circleLayer as MLNCircleStyleLayer:
+                args["type"] = NaxaLibreLayerType.circle.rawValue
+                args["sourceId"] = circleLayer.sourceIdentifier
+                args["sourceLayer"] = circleLayer.sourceLayerIdentifier
+                
+            case let symbolLayer as MLNSymbolStyleLayer:
+                args["type"] = NaxaLibreLayerType.symbol.rawValue
+                args["sourceId"] = symbolLayer.sourceIdentifier
+                args["sourceLayer"] = symbolLayer.sourceLayerIdentifier
+                
+            case let fillExtrusionLayer as MLNFillExtrusionStyleLayer:
+                args["type"] = NaxaLibreLayerType.fillExtrusion.rawValue
+                args["sourceId"] = fillExtrusionLayer.sourceIdentifier
+                args["sourceLayer"] = fillExtrusionLayer.sourceLayerIdentifier
+                
+            case let heatmapLayer as MLNHeatmapStyleLayer:
+                args["type"] = NaxaLibreLayerType.heatmap.rawValue
+                args["sourceId"] = heatmapLayer.sourceIdentifier
+                args["sourceLayer"] = heatmapLayer.sourceLayerIdentifier
+                
+            case let rasterLayer as MLNRasterStyleLayer:
+                args["type"] = NaxaLibreLayerType.raster.rawValue
+                args["sourceId"] = rasterLayer.sourceIdentifier
+                args["sourceLayer"] = nil
+                
+            case let hillshadeLayer as MLNHillshadeStyleLayer:
+                args["type"] = NaxaLibreLayerType.hillshade.rawValue
+                args["sourceId"] = hillshadeLayer.sourceIdentifier
+                args["sourceLayer"] = nil
+                
+            case is MLNBackgroundStyleLayer:
+                args["type"] = NaxaLibreLayerType.background.rawValue
+                args["sourceId"] = nil
+                args["sourceLayer"] = nil
+                
+            default:
+                args["type"] = "unknown"
+                args["sourceId"] = nil
+                args["sourceLayer"] = nil
+        }
+        
+        return args
+    }
 }
 
 

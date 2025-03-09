@@ -267,27 +267,27 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
         return libreView.superview != nil && libreView.style != nil
     }
     
-    func getLayer(id: String) throws -> [String : Any?] {
+    func getLayer(id: String) throws -> [AnyHashable? : Any?] {
         guard let layer = libreView.style?.layer(withIdentifier: id) else {
             throw NSError(domain: "Layer not found", code: 0, userInfo: nil)
         }
-        return ["id": layer.identifier, "type": "layer.type"]
+        return LayerArgsParser.extractArgsFromLayer(layer: layer)
     }
     
-    func getLayers(id: String) throws -> [[String : Any?]] {
+    func getLayers() throws -> [[AnyHashable? : Any?]] {
         return libreView.style?.layers.compactMap { layer in
-            ["id": layer.identifier, "type": "layer.type"]
+            LayerArgsParser.extractArgsFromLayer(layer: layer)
         } ?? []
     }
     
-    func getSource(id: String) throws -> [String : Any?] {
+    func getSource(id: String) throws -> [AnyHashable? : Any?] {
         guard let source = libreView.style?.source(withIdentifier: id) else {
             throw NSError(domain: "Source not found", code: 0, userInfo: nil)
         }
         return ["id": source.identifier]
     }
     
-    func getSources() throws -> [[String : Any?]] {
+    func getSources() throws -> [[AnyHashable? : Any?]] {
         return libreView.style?.sources.compactMap { source in
             ["id": source.identifier]
         } ?? []
@@ -477,58 +477,6 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
             throw NSError(domain: "Location not found", code: 0, userInfo: nil)
         }
         return [location.coordinate.latitude, location.coordinate.longitude]
-    }
-    
-    func getLayer(id: String) throws -> [AnyHashable? : Any?] {
-        guard let layer = libreView.style?.layer(withIdentifier: id) else {
-            throw NSError(domain: "Layer not found", code: 0, userInfo: nil)
-        }
-        
-        return [
-            "id": layer.identifier,
-            "min_zoom": layer.minimumZoomLevel,
-            "max_zoom": layer.maximumZoomLevel,
-            "visibility": layer.isVisible
-        ]
-    }
-    
-    func getLayers() throws -> [[AnyHashable? : Any?]] {
-        guard let layers = libreView.style?.layers else {
-            return []
-        }
-        
-        return layers.map { layer in
-            [
-                "id": layer.identifier,
-                "min_zoom": layer.minimumZoomLevel,
-                "max_zoom": layer.maximumZoomLevel,
-                "visibility": layer.isVisible
-            ]
-        }
-    }
-    
-    func getSource(id: String) throws -> [AnyHashable? : Any?] {
-        guard let source = libreView.style?.source(withIdentifier: id) else {
-            throw NSError(domain: "Source not found", code: 0, userInfo: nil)
-        }
-        
-        return [
-            "id": source.identifier,
-            "attribution": source.description,
-        ]
-    }
-    
-    func getSources() throws -> [[AnyHashable? : Any?]] {
-        guard let sources = libreView.style?.layers else {
-            return []
-        }
-        
-        return sources.map { source in
-            [
-                "id": source.identifier,
-                "attribution": source.description,
-            ]
-        }
     }
     
     func snapshot(completion: @escaping (Result<FlutterStandardTypedData, any Error>) -> Void) {

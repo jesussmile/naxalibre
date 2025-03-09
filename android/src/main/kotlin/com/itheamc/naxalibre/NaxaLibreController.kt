@@ -30,16 +30,6 @@ import org.maplibre.android.location.LocationComponentOptions
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.MapView
 import org.maplibre.android.style.expressions.Expression
-import org.maplibre.android.style.layers.SymbolLayer
-import org.maplibre.android.style.layers.CircleLayer
-import org.maplibre.android.style.layers.FillLayer
-import org.maplibre.android.style.layers.LineLayer
-import org.maplibre.android.style.layers.RasterLayer
-import org.maplibre.android.style.layers.HillshadeLayer
-import org.maplibre.android.style.layers.HeatmapLayer
-import org.maplibre.android.style.layers.BackgroundLayer
-import org.maplibre.android.style.layers.FillExtrusionLayer
-import org.maplibre.android.style.layers.CustomLayer
 
 
 /**
@@ -683,12 +673,7 @@ class NaxaLibreController(
         val layer = libreMap.style?.getLayer(id)
 
         if (layer != null) {
-            return mapOf(
-                "id" to layer.id,
-                "min_zoom" to layer.minZoom,
-                "max_zoom" to layer.maxZoom,
-                "visibility" to (layer.visibility.value.toBooleanStrictOrNull() ?: false),
-            )
+            return LayerArgsParser.extractArgsFromLayer(layer)
         }
 
         throw Exception("Layer not found")
@@ -716,12 +701,7 @@ class NaxaLibreController(
             emptyList()
         } else {
             layers.map {
-                mapOf(
-                    "id" to it.id,
-                    "min_zoom" to it.minZoom,
-                    "max_zoom" to it.maxZoom,
-                    "visibility" to (it.visibility.value.toBooleanStrictOrNull() ?: false),
-                )
+                LayerArgsParser.extractArgsFromLayer(it)
             }
         }
     }
@@ -1270,22 +1250,24 @@ class NaxaLibreController(
                 .setupArgs(componentOptionsParams)
                 .build()
 
-            val locationComponentActivationOptions = LocationComponentActivationOptions
-                .builder(activity, libreMap.style!!)
-                .locationComponentOptions(locationComponentOptions)
-                .useDefaultLocationEngine(false)
-                .locationEngineRequest(
-                    LocationEngineRequestArgsParser.fromArgs(
-                        locationEngineRequestParams ?: emptyMap<Any, Any>()
-                    ).build()
-                )
-                .locationEngine(NaxaLibreLocationEngine.create(activity, provider))
-                .build()
+            libreMap.getStyle { style ->
+                val locationComponentActivationOptions = LocationComponentActivationOptions
+                    .builder(activity, style)
+                    .locationComponentOptions(locationComponentOptions)
+                    .useDefaultLocationEngine(false)
+                    .locationEngineRequest(
+                        LocationEngineRequestArgsParser.fromArgs(
+                            locationEngineRequestParams ?: emptyMap<Any, Any>()
+                        ).build()
+                    )
+                    .locationEngine(NaxaLibreLocationEngine.create(activity, provider))
+                    .build()
 
-            libreMap.locationComponent.apply {
-                activateLocationComponent(locationComponentActivationOptions)
-                isLocationComponentEnabled = true
-                setupArgs(params)
+                libreMap.locationComponent.apply {
+                    activateLocationComponent(locationComponentActivationOptions)
+                    isLocationComponentEnabled = true
+                    setupArgs(params)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
