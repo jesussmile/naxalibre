@@ -3,9 +3,9 @@ package com.itheamc.naxalibre.utils
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.core.graphics.drawable.toBitmapOrNull
+import androidx.core.graphics.drawable.toDrawable
 import java.io.ByteArrayOutputStream
 
 /**
@@ -20,7 +20,7 @@ object ImageUtils {
     fun byteArrayToDrawable(context: Context, byteArray: ByteArray): Drawable? {
         return try {
             val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-            bitmap?.let { BitmapDrawable(context.resources, it) }
+            bitmap?.toDrawable(context.resources)
         } catch (e: Exception) {
             null
         }
