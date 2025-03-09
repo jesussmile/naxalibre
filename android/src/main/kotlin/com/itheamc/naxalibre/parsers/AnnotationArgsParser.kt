@@ -68,6 +68,12 @@ object AnnotationArgsParser {
         // Getting the transition properties from the annotation options
         val transitionsArgs = annotationOptions?.get("transition") as Map<*, *>?
 
+        // Getting the data properties from the annotation options
+        val data = (annotationOptions?.get("data") as? Map<*, *>)?.mapKeys { it.key.toString() }
+
+        // Getting the draggable property from the annotation options
+        val draggable = (annotationOptions?.get("draggable") as Boolean?) ?: false
+
         // Creating the layer based on the type
         val layer = when (type) {
             AnnotationType.Symbol -> {
@@ -335,7 +341,13 @@ object AnnotationArgsParser {
             }
         }
 
-        return NaxaLibreAnnotationsManager.Annotation(id, type, layer as T)
+        return NaxaLibreAnnotationsManager.Annotation(
+            id = id,
+            type = type,
+            layer = layer as T,
+            data = data ?: emptyMap(),
+            draggable = draggable
+        )
     }
 
 

@@ -42,10 +42,10 @@ class NaxaLibreAnnotationsManager(
      *
      * Each type defines a distinct visual representation and interaction behavior:
      *
-     * - **CIRCLE:**  Represents a circular area on the map. Useful for highlighting a region or showing a radius.
-     * - **POLYLINE:** Represents a connected series of line segments. Ideal for paths, routes, or boundaries.
-     * - **POLYGON:** Represents a closed shape formed by connected line segments. Suitable for areas, regions, or buildings.
-     * - **SYMBOL:** Represents a point marker with an associated icon or text label. Used for locations, points of interest, or icons.
+     * - **Circle:**  Represents a circular area on the map. Useful for highlighting a region or showing a radius.
+     * - **Polyline:** Represents a connected series of line segments. Ideal for paths, routes, or boundaries.
+     * - **Polygon:** Represents a closed shape formed by connected line segments. Suitable for areas, regions, or buildings.
+     * - **Symbol:** Represents a point marker with an associated icon or text label. Used for locations, points of interest, or icons.
      */
     enum class AnnotationType { Circle, Polyline, Polygon, Symbol }
 
@@ -58,7 +58,7 @@ class NaxaLibreAnnotationsManager(
      * @property id A unique identifier for the annotation.
      * @property type The type of the annotation (e.g., Marker, Line, Polygon).
      * @property layer The actual layer object representing the annotation on the map.
-     *
+     * @property geometry The geometry of the annotation, such as a point, linestring, or polygon.
      * @property data A map of arbitrary key-value pairs associated with the annotation.
      *               This can be used to store custom data relevant to the annotation.
      *               Defaults to an empty map.
@@ -72,6 +72,25 @@ class NaxaLibreAnnotationsManager(
         val data: Map<String, Any?> = emptyMap(),
         val draggable: Boolean = false,
     ) where T : Layer
+
+    // init {
+    //     libreMap.uiSettings.setAllGesturesEnabled(false)
+    //     libreView.setOnTouchListener { v, event ->
+    //         when (event.action) {
+    //             MotionEvent.ACTION_DOWN -> {
+    //                 Log.d("AMIR", "Touch started at: ${event.x}, ${event.y}")
+    //             }
+    //             MotionEvent.ACTION_MOVE -> {
+    //                 Log.d("AMIR", "Touch moved to: ${event.x}, ${event.y}")
+    //             }
+    //             MotionEvent.ACTION_UP -> {
+    //                 Log.d("AMIR", "Touch ended at: ${event.x}, ${event.y}")
+    //                 v.performClick()
+    //             }
+    //         }
+    //         true
+    //     }
+    // }
 
     /**
      * A list of annotations representing circles drawn on the map.
@@ -213,13 +232,8 @@ class NaxaLibreAnnotationsManager(
         val point = pointArg.mapNotNull { it.toString().toDoubleOrNull() }
         if (point.size < 2) throw Exception("Point argument must be a list of two numbers")
 
-        val data = (optionsArgs["data"] as? Map<*, *>)?.mapKeys { it.key.toString() }
-        val draggable = (optionsArgs["draggable"] as Boolean?) ?: false
-
         val annotation = AnnotationArgsParser.parseArgs<CircleLayer>(args = args).copy(
-            data = data ?: emptyMap(),
             geometry = Point.fromLngLat(point.last(), point.first()),
-            draggable = draggable
         )
 
         if (libreMap.style?.getLayer(annotation.layer.id) != null) {
@@ -277,13 +291,8 @@ class NaxaLibreAnnotationsManager(
 
         if (points.isEmpty()) throw Exception("Points argument must be a list of list double")
 
-        val data = (optionsArgs["data"] as? Map<*, *>)?.mapKeys { it.key.toString() }
-        val draggable = (optionsArgs["draggable"] as Boolean?) ?: false
-
         val annotation = AnnotationArgsParser.parseArgs<LineLayer>(args = args).copy(
-            data = data ?: emptyMap(),
             geometry = LineString.fromLngLats(points),
-            draggable = draggable
         )
 
         if (libreMap.style?.getLayer(annotation.layer.id) != null) {
@@ -348,13 +357,8 @@ class NaxaLibreAnnotationsManager(
 
         if (points.isEmpty()) throw Exception("Points argument must be a list of list double")
 
-        val data = (optionsArgs["data"] as? Map<*, *>)?.mapKeys { it.key.toString() }
-        val draggable = (optionsArgs["draggable"] as Boolean?) ?: false
-
         val annotation = AnnotationArgsParser.parseArgs<FillLayer>(args = args).copy(
-            data = data ?: emptyMap(),
             geometry = Polygon.fromLngLats(points),
-            draggable = draggable
         )
 
         if (libreMap.style?.getLayer(annotation.layer.id) != null) {
@@ -404,13 +408,8 @@ class NaxaLibreAnnotationsManager(
         val point = pointArg.mapNotNull { it.toString().toDoubleOrNull() }
         if (point.size < 2) throw Exception("Point argument must be a list of two numbers")
 
-        val data = (optionsArgs["data"] as? Map<*, *>)?.mapKeys { it.key.toString() }
-        val draggable = (optionsArgs["draggable"] as Boolean?) ?: false
-
         val annotation = AnnotationArgsParser.parseArgs<SymbolLayer>(args = args).copy(
-            data = data ?: emptyMap(),
             geometry = Point.fromLngLat(point.last(), point.first()),
-            draggable = draggable
         )
 
         if (libreMap.style?.getLayer(annotation.layer.id) != null) {
