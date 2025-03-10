@@ -6,6 +6,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
+import 'enums/enums.dart';
 import 'naxalibre_platform_interface.dart';
 
 /// A web implementation of the NaxalibrePlatform of the Naxalibre plugin.
@@ -21,7 +22,7 @@ class NaxaLibreWeb extends NaxaLibrePlatform {
   Widget buildMapView({
     required Map<String, dynamic> creationParams,
     void Function(int id)? onPlatformViewCreated,
-    bool hyperComposition = false,
+    HyperCompositionMode hyperCompositionMode = HyperCompositionMode.disabled,
   }) {
     // TODO: implement buildMapView
     throw UnimplementedError();

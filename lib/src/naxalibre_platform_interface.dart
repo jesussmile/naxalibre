@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'naxalibre_method_channel.dart';
+import 'enums/enums.dart';
 
 abstract class NaxaLibrePlatform extends PlatformInterface {
   /// Constructs a NaxaLibrePlatform.
@@ -27,6 +28,6 @@ abstract class NaxaLibrePlatform extends PlatformInterface {
   Widget buildMapView({
     required Map<String, dynamic> creationParams,
     void Function(int id)? onPlatformViewCreated,
-    bool hyperComposition = false,
+    HyperCompositionMode hyperCompositionMode = HyperCompositionMode.disabled,
   });
 }

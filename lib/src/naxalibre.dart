@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'controller/naxalibre_controller.dart';
 import 'controller/naxalibre_controller_impl.dart';
+import 'enums/enums.dart';
 import 'listeners/naxalibre_listeners.dart';
 import 'models/location_settings.dart';
 import 'models/naxalibre_map_options.dart';
@@ -44,7 +45,7 @@ class NaxaLibreMap extends StatefulWidget {
     this.onMapLongClick,
     this.onCameraMove,
     this.onCameraIdle,
-    this.hyperComposition = false,
+    this.hyperCompositionMode = HyperCompositionMode.disabled,
   });
 
   /// [style] An initial map style whenever map loaded
@@ -96,15 +97,26 @@ class NaxaLibreMap extends StatefulWidget {
   ///
   final OnCameraIdle? onCameraIdle;
 
-  /// [hyperComposition] Hybrid composition appends the native android.view.View
-  /// to the view hierarchy. Therefore, keyboard handling, and accessibility
-  /// work out of the box. Prior to Android 10, this mode might significantly
-  /// reduce the frame throughput (FPS) of the Flutter UI.
-  /// See https://docs.flutter.dev/development/platform-integration/android/platform-views#performance
-  /// for more info.
+  /// The hyper-composition mode used for rendering.
   ///
-  /// Default value is true
-  final bool hyperComposition;
+  /// Hyper-composition optimizes the rendering of complex UI elements, especially
+  /// those involving platform views or heavy drawing operations.
+  ///
+  /// The available modes are:
+  ///
+  /// * [HyperCompositionMode.disabled]: Hyper-composition is completely disabled.
+  ///     This is the default mode.
+  /// * [HyperCompositionMode.androidView]: Hyper-composition is enabled using an
+  ///     Android View (TextureView on Android).
+  /// * [HyperCompositionMode.surfaceView]: Hyper-composition is enabled using a
+  ///     SurfaceView.
+  /// * [HyperCompositionMode.expensiveView]: Hyper-composition is enabled using a
+  ///     custom, potentially expensive, rendering strategy.
+  ///
+  /// Note: It doesn't have any effect on iOS and other platform.
+  ///
+  /// **Default value is [HyperCompositionMode.disabled].**
+  final HyperCompositionMode hyperCompositionMode;
 
   @override
   State<NaxaLibreMap> createState() => _MapLibreViewState();
@@ -157,15 +169,16 @@ class _MapLibreViewState extends State<NaxaLibreMap> {
       'styleUrl': widget.style,
       'mapOptions': widget.mapOptions.toArgs(),
       'uiSettings': widget.uiSettings.toArgs(),
-      'locationSettings': widget.locationSettings.toArgs()
+      'locationSettings': widget.locationSettings.toArgs(),
     };
 
     return NaxaLibrePlatform.instance.buildMapView(
-        creationParams: creationParams,
-        hyperComposition: widget.hyperComposition,
-        onPlatformViewCreated: (id) {
-          NaxaLibreLogger.logMessage("onPlatformViewCreated");
-        });
+      creationParams: creationParams,
+      hyperCompositionMode: widget.hyperCompositionMode,
+      onPlatformViewCreated: (id) {
+        NaxaLibreLogger.logMessage("onPlatformViewCreated");
+      },
+    );
   }
 
   @override

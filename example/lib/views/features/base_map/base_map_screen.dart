@@ -47,7 +47,7 @@ abstract class BaseMapScreenState<T extends BaseMapScreen> extends State<T> {
           provider: LocationProvider.gps,
         ),
       ),
-      hyperComposition: true,
+      hyperCompositionMode: HyperCompositionMode.surfaceView,
       onMapCreated: onMapCreated,
       onStyleLoaded: () {
         debugPrint("[OnStyleLoaded] Style loaded");
