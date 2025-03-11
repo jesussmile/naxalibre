@@ -1,3 +1,6 @@
+## 0.0.4
+* Updated documentation
+
 ## 0.0.3
 
 * Added method reset north
