@@ -229,7 +229,7 @@ enum ViewportMode {
   defaultMode,
 
   /// Viewport mode with flipped y-axis.
-  flippedYMode
+  flippedYMode,
 }
 
 /// Defines the possible line cap styles.
@@ -497,7 +497,7 @@ enum SkyType {
   gradient,
 
   /// The sky is rendered using atmospheric scattering.
-  atmosphere
+  atmosphere,
 }
 
 /// Defines the resampling technique for raster images.
@@ -576,4 +576,59 @@ enum DragEvent {
 
   /// The drag event state is unknown.
   unknown,
+}
+
+/// Defines the different modes for hyper-composition, a technique used to optimize
+/// rendering of complex UI elements, especially those involving platform views
+/// (like Android Views) or heavy drawing operations.
+enum HyperCompositionMode {
+  /// Hyper-composition is completely disabled.
+  ///
+  /// This mode provides the simplest rendering path but may result in performance
+  /// issues with complex UIs, particularly when platform views are involved.
+  /// Platform views will be rendered in their standard composited manner.
+  disabled,
+
+  /// Hyper-composition is enabled using an Android View (specifically, a TextureView
+  /// on Android).
+  ///
+  /// This mode is suitable for rendering platform views efficiently. The platform
+  /// view content is rendered into a TextureView, which can then be composited
+  /// more effectively by Flutter. This can improve performance compared to the
+  /// `disabled` mode when dealing with Android Views.
+  ///
+  /// Note: This mode is specifically designed for Android. It might have no effect
+  /// or behave differently on other platforms.
+  androidView,
+
+  /// Hyper-composition is enabled using a SurfaceView.
+  ///
+  /// This mode attempts to use a SurfaceView for rendering, potentially offering
+  /// better performance than `androidView` in certain scenarios. SurfaceViews
+  /// have a more direct rendering path, which can reduce latency and improve
+  /// frame rates.
+  ///
+  /// SurfaceViews, however, have limitations in terms of compositing with other
+  /// Flutter widgets and might lead to visual artifacts if not used correctly.
+  ///
+  /// Note: Implementation and performance characteristics may vary depending
+  /// on the platform.
+  surfaceView,
+
+  /// Hyper-composition is enabled using an "expensive view".
+  ///
+  /// This mode is intended for scenarios where a custom, potentially expensive,
+  /// rendering strategy is required. It allows for more fine-grained control
+  /// over the rendering process, potentially enabling optimizations for
+  /// complex drawing operations.
+  ///
+  /// This mode typically involves creating a custom view or surface that handles
+  /// the rendering logic. The exact implementation and performance implications
+  /// depend heavily on the specific rendering code.
+  ///
+  /// It should be used for rendering scenarios that are too costly for normal Flutter rendering,
+  /// and that may not be well served by SurfaceView or TextureView.
+  ///
+  /// The performance of this mode heavily depends on the implementation.
+  expensiveView,
 }

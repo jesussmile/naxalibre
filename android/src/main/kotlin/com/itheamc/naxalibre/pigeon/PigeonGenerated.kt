@@ -96,7 +96,7 @@ interface NaxaLibreHostApi {
   fun isAttributionEnabled(): Boolean
   fun setAttributionTintColor(color: Long)
   fun getUri(): String
-  fun getJson(): String
+  fun getJson(callback: (Result<String>) -> Unit)
   fun getLight(): Map<String, Any>
   fun isFullyLoaded(): Boolean
   fun getLayer(id: String): Map<Any?, Any?>
@@ -107,6 +107,7 @@ interface NaxaLibreHostApi {
   fun addImages(images: Map<String, ByteArray>)
   fun addLayer(layer: Map<String, Any?>)
   fun addSource(source: Map<String, Any?>)
+  fun addAnnotation(annotation: Map<String, Any?>)
   fun removeLayer(id: String): Boolean
   fun removeLayerAt(index: Long): Boolean
   fun removeSource(id: String): Boolean
@@ -114,6 +115,7 @@ interface NaxaLibreHostApi {
   fun getImage(id: String): ByteArray
   fun snapshot(callback: (Result<ByteArray>) -> Unit)
   fun triggerRepaint()
+  fun resetNorth()
 
   companion object {
     /** The codec used by NaxaLibreHostApi. */
@@ -745,12 +747,15 @@ interface NaxaLibreHostApi {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.getJson$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            val wrapped: List<Any?> = try {
-              listOf(api.getJson())
-            } catch (exception: Throwable) {
-              wrapError(exception)
+            api.getJson{ result: Result<String> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
             }
-            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)
@@ -924,6 +929,24 @@ interface NaxaLibreHostApi {
         }
       }
       run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.addAnnotation$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val annotationArg = args[0] as Map<String, Any?>
+            val wrapped: List<Any?> = try {
+              api.addAnnotation(annotationArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.removeLayer$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
@@ -1033,6 +1056,22 @@ interface NaxaLibreHostApi {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               api.triggerRepaint()
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.resetNorth$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              api.resetNorth()
               listOf(null)
             } catch (exception: Throwable) {
               wrapError(exception)

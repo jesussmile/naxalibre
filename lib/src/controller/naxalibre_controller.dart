@@ -15,6 +15,7 @@ import '../sources/source.dart';
 import '../layers/layer.dart';
 import '../style_images/style_image.dart';
 import '../typedefs/typedefs.dart';
+import '../annotations/annotation.dart';
 
 /// An abstract class representing a map interface with methods for interacting
 /// with map features, camera positions, styles, and settings.
@@ -88,6 +89,19 @@ abstract class NaxaLibreController {
   ///
   /// Throws an exception if the sourceId is duplicate.
   Future<void> addSource<T extends Source>({required T source});
+
+  /// Adds an annotation to the map.
+  ///
+  /// [annotation]: The annotation object to add.
+  ///
+  /// This method allows you to add various types of annotations to the map, such as:
+  /// *   [PointAnnotation]
+  /// *   [CircleAnnotation]
+  /// *   [PolylineAnnotation]
+  /// *   [PolygonAnnotation]
+  ///
+  /// Make sure the annotation properties are valid.
+  Future<void> addAnnotation<T extends Annotation>({required T annotation});
 
   /// Adds a style layer in the map.
   ///
@@ -216,6 +230,10 @@ abstract class NaxaLibreController {
   /// Method to trigger repaint
   ///
   Future<void> triggerRepaint();
+
+  /// Method to reset north
+  ///
+  Future<void> resetNorth();
 
   /// Converts a screen location (in pixels) to a geographic coordinate (latitude and longitude).
   ///
@@ -586,34 +604,34 @@ abstract class NaxaLibreController {
   void removeOnFpsChangedListener(OnFpsChanged listener);
 
   /// Clears all the map rendered listeners.
-  void clearOnMapRenderedListener();
+  void clearOnMapRenderedListeners();
 
   /// Clears all the map loaded listeners.
-  void clearOnMapLoadedListener();
+  void clearOnMapLoadedListeners();
 
   /// Clears all the style loaded listeners.
-  void clearOnStyleLoadedListener();
+  void clearOnStyleLoadedListeners();
 
   /// Clears all the map click listeners.
-  void clearOnMapClickListener();
+  void clearOnMapClickListeners();
 
   /// Clears all the map long-click listeners.
-  void clearOnMapLongClickListener();
+  void clearOnMapLongClickListeners();
 
   /// Clears all the camera idle listeners.
-  void clearOnCameraIdleListener();
+  void clearOnCameraIdleListeners();
 
   /// Clears all the camera move listeners.
-  void clearOnCameraMoveListener();
+  void clearOnCameraMoveListeners();
 
   /// Clears all the rotation listeners.
-  void clearOnRotateListener();
+  void clearOnRotateListeners();
 
   /// Clears all the fling listeners.
-  void clearOnFlingListener();
+  void clearOnFlingListeners();
 
   /// Clears all the FPS change listeners.
-  void clearOnFpsChangedListener();
+  void clearOnFpsChangedListeners();
 
   /// Method to dispose the controller
   ///

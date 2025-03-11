@@ -1,3 +1,12 @@
+## 0.0.3
+
+* Added method reset north
+* Added support for annotations
+* Shown attributions from sources in Attribution dialog
+* Fixes raw json style string not working on iOS
+* Fixes getJson() not returning correct style json
+* Added different Hybrid Composition modes
+
 ## 0.0.2
 
 * Fixes bugs related to queryRenderedFeatures method

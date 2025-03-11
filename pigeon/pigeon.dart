@@ -104,6 +104,7 @@ abstract class NaxaLibreHostApi {
   //
   String getUri();
 
+  @async
   String getJson();
 
   Map<String, Object> getLight();
@@ -126,6 +127,8 @@ abstract class NaxaLibreHostApi {
 
   void addSource(Map<String, Object?> source);
 
+  void addAnnotation(Map<String, Object?> annotation);
+
   bool removeLayer(String id);
 
   bool removeLayerAt(int index);
@@ -140,6 +143,8 @@ abstract class NaxaLibreHostApi {
   Uint8List snapshot();
 
   void triggerRepaint();
+
+  void resetNorth();
 }
 
 @FlutterApi()

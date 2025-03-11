@@ -87,7 +87,7 @@ class RasterDemSourceProperties extends SourceProperties {
   /// bounding box in the following order: [sw.lng, sw.lat, ne.lng, ne.lat].
   /// When this property is included in a source, no tiles outside of
   /// the given bounds are requested by Mapbox GL.
-  /// default is <double>[-180.0, -85.051129, 180.0, 85.051129]
+  /// default is [-180.0, -85.051129, 180.0, 85.051129]
   final LatLngBounds? bounds;
 
   /// Minimum zoom level for which tiles are available, as in the TileJSON spec.

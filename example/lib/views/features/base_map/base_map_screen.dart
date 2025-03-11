@@ -22,9 +22,7 @@ abstract class BaseMapScreenState<T extends BaseMapScreen> extends State<T> {
       appBar: AppBar(
         title: Text(widget.title, style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.black.withValues(alpha: 0.6),
-        iconTheme: Theme.of(context).iconTheme.copyWith(
-          color: Colors.white,
-        ),
+        iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white),
       ),
       body: buildMapWithControls(),
     );
@@ -49,36 +47,40 @@ abstract class BaseMapScreenState<T extends BaseMapScreen> extends State<T> {
           provider: LocationProvider.gps,
         ),
       ),
-      hyperComposition: true,
+      hyperCompositionMode: HyperCompositionMode.surfaceView,
       onMapCreated: onMapCreated,
       onStyleLoaded: () {
-        print("=============OnStyleLoaded");
+        debugPrint("[OnStyleLoaded] Style loaded");
       },
       onMapLoaded: () {
-        print("=============onMapLoaded");
+        debugPrint("[onMapLoaded] Map loaded");
       },
       onMapClick: (latLng) {
-        print("=============onMapClick ${latLng.latLngList()}");
+        debugPrint("[onMapClick] Click on map at ${latLng.latLngList()}");
       },
       onMapLongClick: (latLng) async {
-        print("=============onMapLongClick ${latLng.latLngList()}");
+        debugPrint(
+          "[onMapLongClick] Long click on map at ${latLng.latLngList()}",
+        );
         final layers = await controller?.getLayers();
         if (layers != null) {
-          print(layers.map((l) => l["id"]).nonNulls.toList());
+          debugPrint(
+            layers
+                // .where(
+                //   (m) => m.values.any(
+                //     (s) => s?.toString().contains("annotation") == true,
+                //   ),
+                // )
+                .toString(),
+          );
         }
       },
     );
   }
 
   void onMapCreated(NaxaLibreController mapController) {
-    print("=============onMapCreated");
+    debugPrint("[onMapCreated] Map created");
     controller = mapController;
-    controller?.addOnRotateListener((event, v1, v2, v3) {
-      print("=============onRotate $event $v1 $v2 $v3");
-    });
-    controller?.addOnFlingListener(() {
-      print("=============onFling");
-    });
     onControllerReady(mapController);
   }
 

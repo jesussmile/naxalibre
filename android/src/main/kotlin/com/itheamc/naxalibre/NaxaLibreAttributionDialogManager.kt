@@ -7,13 +7,14 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.net.Uri
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.net.toUri
 import org.maplibre.android.MapStrictMode
 import org.maplibre.android.R.layout
 import org.maplibre.android.R.string
+import org.maplibre.android.attribution.AttributionParser
 import org.maplibre.android.maps.AttributionDialogManager
 import org.maplibre.android.maps.MapLibreMap
 
@@ -29,11 +30,14 @@ import org.maplibre.android.maps.MapLibreMap
  */
 class NaxaLibreAttributionDialogManager(
     private val context: Context,
-    maplibreMap: MapLibreMap,
+    private val maplibreMap: MapLibreMap,
     private val attributions: Map<String, String>,
 ) : AttributionDialogManager(context, maplibreMap),
     View.OnClickListener, DialogInterface.OnClickListener {
     private var dialog: AlertDialog? = null
+    private val allAttributions by lazy {
+        attributions + attributionsFromSources()
+    }
 
     /**
      * Handles the click event for the view.
@@ -51,7 +55,8 @@ class NaxaLibreAttributionDialogManager(
         }
 
         if (!isActivityFinishing) {
-            this.showAttributionDialog(this.attributionTitles)
+            val attributionTitles: Array<String?> = allAttributions.map { it.key }.toTypedArray()
+            this.showAttributionDialog(attributionTitles)
         }
     }
 
@@ -85,8 +90,6 @@ class NaxaLibreAttributionDialogManager(
         )
         this.dialog = builder.show()
     }
-
-    private val attributionTitles: Array<String?> = attributions.map { it.key }.toTypedArray()
 
     /**
      * Handles the click event on an item in a dialog.
@@ -137,7 +140,8 @@ class NaxaLibreAttributionDialogManager(
      * @see showWebPage
      */
     private fun showMapAttributionWebPage(which: Int) {
-        val url = attributions[attributions.keys.toTypedArray()[which]]
+        val url =
+            allAttributions[allAttributions.keys.toTypedArray()[which]]
         url?.let { this.showWebPage(it) }
     }
 
@@ -152,7 +156,7 @@ class NaxaLibreAttributionDialogManager(
     private fun showWebPage(url: String) {
         try {
             val intent = Intent("android.intent.action.VIEW")
-            intent.setData(Uri.parse(url))
+            intent.setData(url.toUri())
             intent.setFlags(FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
         } catch (var3: ActivityNotFoundException) {
@@ -162,4 +166,40 @@ class NaxaLibreAttributionDialogManager(
         }
     }
 
+    /**
+     * Retrieves attributions from the style sources of the Mapbox map.
+     *
+     * This function extracts attribution information (title and URL) from each source defined in the current map style.
+     * It uses the `AttributionParser` to parse the attribution strings associated with each source.
+     *
+     * The function attempts to build an `AttributionParser.Options` object to handle the attribution data.
+     * The parser is configured to:
+     *   - Include the copyright sign (©) in the generated attributions.
+     *   - Include a link for "Improve This Map" in the generated attributions.
+     *   - Provide it with attribution strings from each source.
+     *
+     * The function then iterates through the parsed attributions, storing the title and URL in a map.
+     *
+     * @return A map containing the attribution titles and URLs, or an empty map if no attributions are found or an error occurs.
+     */
+    private fun attributionsFromSources(): Map<String, String> {
+        val tempAttributions = mutableMapOf<String, String>()
+
+        try {
+            val sourceAttributions = AttributionParser.Options(context).withCopyrightSign(true)
+                .withImproveMap(true)
+                .withAttributionData(*(maplibreMap.style?.sources?.map { it.attribution.trim() }
+                    ?.filter { it.isNotEmpty() } ?: emptyList()).toTypedArray())
+                .build().attributions
+
+            for (attribution in sourceAttributions) {
+                tempAttributions[attribution.title] = attribution.url
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return tempAttributions
+    }
 }

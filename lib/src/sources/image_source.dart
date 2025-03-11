@@ -23,7 +23,7 @@ part of 'source.dart';
 
 class ImageSource extends Source<ImageSourceProperties> {
   /// Corners of image specified in longitude, latitude pairs.
-  /// List<List<double>> where each inner list contains the [longitude, latitude] pairs.
+  /// List of list of double where each inner list contains the [longitude, latitude] pairs.
   final LatLngQuad coordinates;
 
   /// Constructor for the ImageSource class.

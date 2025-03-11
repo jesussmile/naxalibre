@@ -17,7 +17,7 @@ import org.maplibre.android.style.layers.TransitionOptions
 
 /**
  * `LayerArgsParser` is a utility object that provides functionality for creating and configuring
- * Mapbox GL layers from a map of arguments. It supports various layer types including symbol,
+ * MapLibre GL layers from a map of arguments. It supports various layer types including symbol,
  * fill, line, circle, raster, fill extrusion, heatmap, hillshade, and background layers.
  *
  * This object contains the main function fromArgs used to generate a layer.
@@ -762,5 +762,100 @@ object LayerArgsParser {
         }
 
         return TransitionOptions(duration, delay)
+    }
+
+    /**
+     * Extracts a set of arguments from a given Layer object.
+     *
+     * This function examines the provided `Layer` and returns a map containing
+     * key-value pairs representing the layer's properties.  The map includes:
+     *
+     * - **Common Properties (for all layer types):**
+     *   - `"id"`: The unique identifier of the layer.
+     *   - `"min_zoom"`: The minimum zoom level at which the layer is visible.
+     *   - `"max_zoom"`: The maximum zoom level at which the layer is visible.
+     *
+     * - **Layer-Specific Properties:**
+     *   - `"type"`: A string describing the layer type (e.g., "fill-layer", "line-layer").
+     *   - `"sourceId"`: The ID of the data source used by the layer. This may be null for some layers (e.g., BackgroundLayer).
+     *   - `"source_layer"`: The specific layer within the data source that this layer uses. This may be null for some layers.
+     *
+     * The function uses a `when` expression to handle different layer types, adding
+     * type-specific information to the resulting map. If the layer type is unknown,
+     * it defaults to a type of "unknown" and null source information.
+     *
+     * @param layer The Layer object to extract arguments from.
+     * @return A map containing the extracted arguments as key-value pairs.
+     */
+    fun extractArgsFromLayer(layer: Layer): Map<Any?, Any?> {
+        return buildMap {
+            // Common properties for all layers
+            put("id", layer.id)
+            put("minzoom", layer.minZoom)
+            put("maxzoom", layer.maxZoom)
+
+            // Layer-specific properties
+            when (layer) {
+                is FillLayer -> {
+                    put("type", "fill-layer")
+                    put("sourceId", layer.sourceId)
+                    put("sourceLayer", layer.sourceLayer)
+                }
+
+                is LineLayer -> {
+                    put("type", "line-layer")
+                    put("sourceId", layer.sourceId)
+                    put("source_layer", layer.sourceLayer)
+                }
+
+                is CircleLayer -> {
+                    put("type", "circle-layer")
+                    put("sourceId", layer.sourceId)
+                    put("sourceLayer", layer.sourceLayer)
+                }
+
+                is SymbolLayer -> {
+                    put("type", "symbol-layer")
+                    put("sourceId", layer.sourceId)
+                    put("sourceLayer", layer.sourceLayer)
+                }
+
+                is FillExtrusionLayer -> {
+                    put("type", "fill-extrusion-layer")
+                    put("sourceId", layer.sourceId)
+                    put("sourceLayer", layer.sourceLayer)
+                }
+
+                is HeatmapLayer -> {
+                    put("type", "heatmap-layer")
+                    put("sourceId", layer.sourceId)
+                    put("sourceLayer", layer.sourceLayer)
+                }
+
+                is RasterLayer -> {
+                    put("type", "raster-layer")
+                    put("sourceId", layer.sourceId)
+                    put("sourceLayer", null)
+                }
+
+                is HillshadeLayer -> {
+                    put("type", "hill-shade-layer")
+                    put("sourceId", layer.sourceId)
+                    put("sourceLayer", null)
+                }
+
+                is BackgroundLayer -> {
+                    put("type", "background-layer")
+                    put("sourceId", null)
+                    put("sourceLayer", null)
+                }
+
+                else -> {
+                    put("type", "unknown")
+                    put("sourceId", null)
+                    put("sourceLayer", null)
+                }
+            }
+        }
     }
 }

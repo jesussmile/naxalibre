@@ -128,7 +128,7 @@ protocol NaxaLibreHostApi {
   func isAttributionEnabled() throws -> Bool
   func setAttributionTintColor(color: Int64) throws
   func getUri() throws -> String
-  func getJson() throws -> String
+  func getJson(completion: @escaping (Result<String, Error>) -> Void)
   func getLight() throws -> [String: Any]
   func isFullyLoaded() throws -> Bool
   func getLayer(id: String) throws -> [AnyHashable?: Any?]
@@ -139,6 +139,7 @@ protocol NaxaLibreHostApi {
   func addImages(images: [String: FlutterStandardTypedData]) throws
   func addLayer(layer: [String: Any?]) throws
   func addSource(source: [String: Any?]) throws
+  func addAnnotation(annotation: [String: Any?]) throws
   func removeLayer(id: String) throws -> Bool
   func removeLayerAt(index: Int64) throws -> Bool
   func removeSource(id: String) throws -> Bool
@@ -146,6 +147,7 @@ protocol NaxaLibreHostApi {
   func getImage(id: String) throws -> FlutterStandardTypedData
   func snapshot(completion: @escaping (Result<FlutterStandardTypedData, Error>) -> Void)
   func triggerRepaint() throws
+  func resetNorth() throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -686,11 +688,13 @@ class NaxaLibreHostApiSetup {
     let getJsonChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.getJson\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getJsonChannel.setMessageHandler { _, reply in
-        do {
-          let result = try api.getJson()
-          reply(wrapResult(result))
-        } catch {
-          reply(wrapError(error))
+        api.getJson { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
         }
       }
     } else {
@@ -839,6 +843,21 @@ class NaxaLibreHostApiSetup {
     } else {
       addSourceChannel.setMessageHandler(nil)
     }
+    let addAnnotationChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.addAnnotation\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      addAnnotationChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let annotationArg = args[0] as! [String: Any?]
+        do {
+          try api.addAnnotation(annotation: annotationArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      addAnnotationChannel.setMessageHandler(nil)
+    }
     let removeLayerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.removeLayer\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       removeLayerChannel.setMessageHandler { message, reply in
@@ -941,6 +960,19 @@ class NaxaLibreHostApiSetup {
       }
     } else {
       triggerRepaintChannel.setMessageHandler(nil)
+    }
+    let resetNorthChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.resetNorth\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      resetNorthChannel.setMessageHandler { _, reply in
+        do {
+          try api.resetNorth()
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      resetNorthChannel.setMessageHandler(nil)
     }
   }
 }

@@ -17,6 +17,12 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
     // MARK: NaxaLibreListeners
     public let naxaLibreListeners: NaxaLibreListeners
     
+    // MARK: NaxaLibreAnnotationsManager
+    private lazy var libreAnnotationsManager: NaxaLibreAnnotationsManager = NaxaLibreAnnotationsManager(
+        binaryMessenger: binaryMessenger,
+        libreView: libreView
+    )
+    
     // MARK: Init method for constructing instance of this class
     init(binaryMessenger: FlutterBinaryMessenger, libreView: MLNMapView, args: Any?) {
         self.binaryMessenger = binaryMessenger
@@ -114,7 +120,15 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
     }
     
     func setStyle(style: String) throws {
-        libreView.styleURL = URL(string: style)
+        if style.isWebURL {
+            libreView.styleURL = URL(string: style)
+        } else if style.isFilePath {
+            libreView.styleURL = URL(fileURLWithPath: style)
+        } else if style.isJSONString {
+            libreView.styleURL = try style.styleUrl()
+        } else {
+            throw NSError(domain: "Unsupported style format", code: 0, userInfo: nil)
+        }
     }
     
     func setSwapBehaviorFlush(flush: Bool) throws {
@@ -225,29 +239,32 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
         return libreView.styleURL?.absoluteString ?? ""
     }
     
-    func getJson() throws -> String {
-        guard let style = libreView.style else {
-            throw NSError(domain: "Map style is not loaded", code: -1, userInfo: nil)
+    func getJson(completion: @escaping (Result<String, any Error>) -> Void) {
+        guard let url = libreView.styleURL else {
+            completion(.failure(NSError(domain: "Map style is not loaded", code: -1, userInfo: nil)))
+            return
         }
         
-        // Create a dictionary to represent the style
-        var styleDictionary: [String: Any] = [:]
-        
-        // Add style properties to the dictionary
-        styleDictionary["name"] = style.name
-        styleDictionary["sources"] = style.sources.map { $0.identifier }
-        styleDictionary["layers"] = style.layers.map { $0.identifier }
-        
-        // Serialize the dictionary to JSON
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: styleDictionary, options: .prettyPrinted)
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                return jsonString
-            } else {
-                throw NSError(domain: "Failed to convert JSON data to string", code: -2, userInfo: nil)
-            }
-        } catch {
-            throw NSError(domain: "Failed to serialize style to JSON: \(error.localizedDescription)", code: -3, userInfo: nil)
+        switch url.scheme {
+            case "http", "https":
+                URLSession.shared.dataTask(with: url) { data, _, error in
+                    if let data = data, let jsonString = String(data: data, encoding: .utf8) {
+                        completion(.success(jsonString))
+                    } else {
+                        completion(.failure(error ?? NSError(domain: "Unable to load style JSON", code: -1, userInfo: nil)))
+                    }
+                }.resume()
+                
+            case "file":
+                do {
+                    let jsonString = try String(contentsOf: url, encoding: .utf8)
+                    completion(.success(jsonString))
+                } catch {
+                    completion(.failure(error))
+                }
+                
+            default:
+                completion(.failure(NSError(domain: "Unsupported URL scheme", code: -1, userInfo: nil)))
         }
     }
     
@@ -267,27 +284,27 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
         return libreView.superview != nil && libreView.style != nil
     }
     
-    func getLayer(id: String) throws -> [String : Any?] {
+    func getLayer(id: String) throws -> [AnyHashable? : Any?] {
         guard let layer = libreView.style?.layer(withIdentifier: id) else {
             throw NSError(domain: "Layer not found", code: 0, userInfo: nil)
         }
-        return ["id": layer.identifier, "type": "layer.type"]
+        return LayerArgsParser.extractArgsFromLayer(layer: layer)
     }
     
-    func getLayers(id: String) throws -> [[String : Any?]] {
+    func getLayers() throws -> [[AnyHashable? : Any?]] {
         return libreView.style?.layers.compactMap { layer in
-            ["id": layer.identifier, "type": "layer.type"]
+            LayerArgsParser.extractArgsFromLayer(layer: layer)
         } ?? []
     }
     
-    func getSource(id: String) throws -> [String : Any?] {
+    func getSource(id: String) throws -> [AnyHashable? : Any?] {
         guard let source = libreView.style?.source(withIdentifier: id) else {
             throw NSError(domain: "Source not found", code: 0, userInfo: nil)
         }
         return ["id": source.identifier]
     }
     
-    func getSources() throws -> [[String : Any?]] {
+    func getSources() throws -> [[AnyHashable? : Any?]] {
         return libreView.style?.sources.compactMap { source in
             ["id": source.identifier]
         } ?? []
@@ -432,6 +449,10 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
         libreView.style?.addSource(source)
     }
     
+    func addAnnotation(annotation: [String : Any?]) throws {
+        try libreAnnotationsManager.addAnnotation(args: annotation)
+    }
+    
     func removeLayer(id: String) throws -> Bool {
         guard let layer = libreView.style?.layer(withIdentifier: id) else {
             return false
@@ -475,58 +496,6 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
         return [location.coordinate.latitude, location.coordinate.longitude]
     }
     
-    func getLayer(id: String) throws -> [AnyHashable? : Any?] {
-        guard let layer = libreView.style?.layer(withIdentifier: id) else {
-            throw NSError(domain: "Layer not found", code: 0, userInfo: nil)
-        }
-        
-        return [
-            "id": layer.identifier,
-            "min_zoom": layer.minimumZoomLevel,
-            "max_zoom": layer.maximumZoomLevel,
-            "visibility": layer.isVisible
-        ]
-    }
-    
-    func getLayers() throws -> [[AnyHashable? : Any?]] {
-        guard let layers = libreView.style?.layers else {
-            return []
-        }
-        
-        return layers.map { layer in
-            [
-                "id": layer.identifier,
-                "min_zoom": layer.minimumZoomLevel,
-                "max_zoom": layer.maximumZoomLevel,
-                "visibility": layer.isVisible
-            ]
-        }
-    }
-    
-    func getSource(id: String) throws -> [AnyHashable? : Any?] {
-        guard let source = libreView.style?.source(withIdentifier: id) else {
-            throw NSError(domain: "Source not found", code: 0, userInfo: nil)
-        }
-        
-        return [
-            "id": source.identifier,
-            "attribution": source.description,
-        ]
-    }
-    
-    func getSources() throws -> [[AnyHashable? : Any?]] {
-        guard let sources = libreView.style?.layers else {
-            return []
-        }
-        
-        return sources.map { source in
-            [
-                "id": source.identifier,
-                "attribution": source.description,
-            ]
-        }
-    }
-    
     func snapshot(completion: @escaping (Result<FlutterStandardTypedData, any Error>) -> Void) {
         let options = MLNMapSnapshotOptions(
             styleURL: libreView.styleURL,
@@ -554,6 +523,10 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
     
     func triggerRepaint() throws {
         libreView.triggerRepaint()
+    }
+    
+    func resetNorth() throws {
+        libreView.resetNorth()
     }
     
     private func handleEaseAndAnimateCamera(args: [String: Any?]) throws {
@@ -706,7 +679,11 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
     private func handleCreationParams() {
         if let creationArgs = args as? [String: Any?] {
             if let styleURL = creationArgs["styleUrl"] as? String {
-                self.libreView.styleURL = URL(string: styleURL)
+                do {
+                    try setStyle(style: styleURL)
+                } catch {
+                    // Unable to set style
+                }
             }
             
             if let mapOptionsArgs = creationArgs["mapOptions"] as? [String: Any?] {

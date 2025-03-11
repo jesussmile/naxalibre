@@ -33,7 +33,7 @@ struct FillLayerArgsParser {
 
 /// Extension helper for the `MLNFillStyleLayer`
 ///
-fileprivate extension MLNFillStyleLayer {
+extension MLNFillStyleLayer {
     
     // MARK: Configure Fill Layer Args
     func configureLayerArgs(_ properties: [String: Any?]?) -> MLNFillStyleLayer {
