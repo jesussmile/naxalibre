@@ -274,3 +274,49 @@ extension UIColor {
         return nil
     }
 }
+
+
+extension String {
+    /// Converts the string into a temporary file containing the style JSON and returns its URL.
+    ///
+    /// This method writes the string content to a temporary directory as `style.json`.
+    ///
+    /// - Throws: An error if writing to the file system fails.
+    /// - Returns: The URL of the saved `style.json` file.
+    func styleUrl() throws -> URL {
+        let tempDir = FileManager.default.temporaryDirectory
+        let fileURL = tempDir.appendingPathComponent("style.json")
+        
+        try self.write(to: fileURL, atomically: true, encoding: .utf8)
+        return fileURL
+    }
+    
+    /// Checks if the string is a valid web URL.
+    ///
+    /// A valid web URL must have a scheme (`http` or `https`) and a host.
+    ///
+    /// - Returns: `true` if the string is a valid web URL, otherwise `false`.
+    var isWebURL: Bool {
+        guard let url = URL(string: self) else { return false }
+        return ["http", "https"].contains(url.scheme?.lowercased() ?? "")
+    }
+    
+    /// Checks if the string is a valid file path.
+    ///
+    /// A valid file path is determined by checking if the string represents an absolute file path.
+    ///
+    /// - Returns: `true` if the string is a valid file path, otherwise `false`.
+    var isFilePath: Bool {
+        return FileManager.default.fileExists(atPath: self)
+    }
+    
+    /// Checks if the string is a valid JSON.
+    ///
+    /// This method attempts to deserialize the string into a JSON object.
+    ///
+    /// - Returns: `true` if the string is a valid JSON, otherwise `false`.
+    var isJSONString: Bool {
+        guard let data = self.data(using: .utf8) else { return false }
+        return (try? JSONSerialization.jsonObject(with: data)) != nil
+    }
+}

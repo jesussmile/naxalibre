@@ -120,7 +120,15 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
     }
     
     func setStyle(style: String) throws {
-        libreView.styleURL = URL(string: style)
+        if style.isWebURL {
+            libreView.styleURL = URL(string: style)
+        } else if style.isFilePath {
+            libreView.styleURL = URL(fileURLWithPath: style)
+        } else if style.isJSONString {
+            libreView.styleURL = try style.styleUrl()
+        } else {
+            throw NSError(domain: "Unsupported style format", code: 0, userInfo: nil)
+        }
     }
     
     func setSwapBehaviorFlush(flush: Bool) throws {
@@ -668,7 +676,11 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
     private func handleCreationParams() {
         if let creationArgs = args as? [String: Any?] {
             if let styleURL = creationArgs["styleUrl"] as? String {
-                self.libreView.styleURL = URL(string: styleURL)
+                do {
+                    try setStyle(style: styleURL)
+                } catch {
+                    // Unable to set style
+                }
             }
             
             if let mapOptionsArgs = creationArgs["mapOptions"] as? [String: Any?] {
