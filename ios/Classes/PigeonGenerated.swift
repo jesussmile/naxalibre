@@ -128,7 +128,7 @@ protocol NaxaLibreHostApi {
   func isAttributionEnabled() throws -> Bool
   func setAttributionTintColor(color: Int64) throws
   func getUri() throws -> String
-  func getJson() throws -> String
+  func getJson(completion: @escaping (Result<String, Error>) -> Void)
   func getLight() throws -> [String: Any]
   func isFullyLoaded() throws -> Bool
   func getLayer(id: String) throws -> [AnyHashable?: Any?]
@@ -688,11 +688,13 @@ class NaxaLibreHostApiSetup {
     let getJsonChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.getJson\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getJsonChannel.setMessageHandler { _, reply in
-        do {
-          let result = try api.getJson()
-          reply(wrapResult(result))
-        } catch {
-          reply(wrapError(error))
+        api.getJson { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
         }
       }
     } else {

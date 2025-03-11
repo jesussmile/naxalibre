@@ -239,29 +239,32 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
         return libreView.styleURL?.absoluteString ?? ""
     }
     
-    func getJson() throws -> String {
-        guard let style = libreView.style else {
-            throw NSError(domain: "Map style is not loaded", code: -1, userInfo: nil)
+    func getJson(completion: @escaping (Result<String, any Error>) -> Void) {
+        guard let url = libreView.styleURL else {
+            completion(.failure(NSError(domain: "Map style is not loaded", code: -1, userInfo: nil)))
+            return
         }
         
-        // Create a dictionary to represent the style
-        var styleDictionary: [String: Any] = [:]
-        
-        // Add style properties to the dictionary
-        styleDictionary["name"] = style.name
-        styleDictionary["sources"] = style.sources.map { $0.identifier }
-        styleDictionary["layers"] = style.layers.map { $0.identifier }
-        
-        // Serialize the dictionary to JSON
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: styleDictionary, options: .prettyPrinted)
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                return jsonString
-            } else {
-                throw NSError(domain: "Failed to convert JSON data to string", code: -2, userInfo: nil)
-            }
-        } catch {
-            throw NSError(domain: "Failed to serialize style to JSON: \(error.localizedDescription)", code: -3, userInfo: nil)
+        switch url.scheme {
+            case "http", "https":
+                URLSession.shared.dataTask(with: url) { data, _, error in
+                    if let data = data, let jsonString = String(data: data, encoding: .utf8) {
+                        completion(.success(jsonString))
+                    } else {
+                        completion(.failure(error ?? NSError(domain: "Unable to load style JSON", code: -1, userInfo: nil)))
+                    }
+                }.resume()
+                
+            case "file":
+                do {
+                    let jsonString = try String(contentsOf: url, encoding: .utf8)
+                    completion(.success(jsonString))
+                } catch {
+                    completion(.failure(error))
+                }
+                
+            default:
+                completion(.failure(NSError(domain: "Unsupported URL scheme", code: -1, userInfo: nil)))
         }
     }
     

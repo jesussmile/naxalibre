@@ -613,8 +613,13 @@ class NaxaLibreController(
      * The style JSON defines the visual appearance of the map.
      * @return The style JSON string.
      */
-    override fun getJson(): String {
-        return libreMap.style!!.json
+    override fun getJson(callback: (Result<String>) -> Unit) {
+        try {
+            val json = libreMap.style!!.json
+            callback(Result.success(json))
+        } catch (e: Exception) {
+            callback(Result.failure(e))
+        }
     }
 
     /**

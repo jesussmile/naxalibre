@@ -104,6 +104,7 @@ abstract class NaxaLibreHostApi {
   //
   String getUri();
 
+  @async
   String getJson();
 
   Map<String, Object> getLight();

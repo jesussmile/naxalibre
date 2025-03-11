@@ -96,7 +96,7 @@ interface NaxaLibreHostApi {
   fun isAttributionEnabled(): Boolean
   fun setAttributionTintColor(color: Long)
   fun getUri(): String
-  fun getJson(): String
+  fun getJson(callback: (Result<String>) -> Unit)
   fun getLight(): Map<String, Any>
   fun isFullyLoaded(): Boolean
   fun getLayer(id: String): Map<Any?, Any?>
@@ -747,12 +747,15 @@ interface NaxaLibreHostApi {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.getJson$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            val wrapped: List<Any?> = try {
-              listOf(api.getJson())
-            } catch (exception: Throwable) {
-              wrapError(exception)
+            api.getJson{ result: Result<String> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
             }
-            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)
