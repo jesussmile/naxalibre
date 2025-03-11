@@ -549,9 +549,10 @@ class SymbolLayerProperties extends LayerProperties {
   /// Default Symbol Layer properties
   static SymbolLayerProperties get defaultProperties {
     return SymbolLayerProperties(
-        textField: ['get', 'point_count_abbreviated'],
-        textSize: 12.0,
-        textColor: "#fff");
+      textField: ['get', 'point_count_abbreviated'],
+      textSize: 12.0,
+      textColor: "#fff",
+    );
   }
 
   /// Method to proceeds the symbol layer properties for native
@@ -625,19 +626,21 @@ class SymbolLayerProperties extends LayerProperties {
 
     if (iconAnchor != null &&
         (iconAnchor is IconAnchor || iconAnchor is List)) {
-      layoutArgs['icon-anchor'] = iconAnchor is IconAnchor
-          ? (iconAnchor as IconAnchor).key
-          : iconAnchor is List
+      layoutArgs['icon-anchor'] =
+          iconAnchor is IconAnchor
+              ? (iconAnchor as IconAnchor).key
+              : iconAnchor is List
               ? jsonEncode(iconAnchor)
               : iconAnchor;
     }
 
     if (iconOffset != null && iconOffset is List) {
-      layoutArgs['icon-offset'] = iconOffset is List<double> ||
-              iconOffset is List<int> ||
-              iconOffset is List<num>
-          ? iconOffset
-          : jsonEncode(iconOffset);
+      layoutArgs['icon-offset'] =
+          iconOffset is List<double> ||
+                  iconOffset is List<int> ||
+                  iconOffset is List<num>
+              ? iconOffset
+              : jsonEncode(iconOffset);
     }
 
     if (iconPitchAlignment != null &&
@@ -647,8 +650,8 @@ class SymbolLayerProperties extends LayerProperties {
           iconPitchAlignment is IconPitchAlignment
               ? (iconPitchAlignment as IconPitchAlignment).name
               : iconPitchAlignment is List
-                  ? jsonEncode(iconPitchAlignment)
-                  : iconPitchAlignment;
+              ? jsonEncode(iconPitchAlignment)
+              : iconPitchAlignment;
     }
 
     if (iconRotationAlignment != null &&
@@ -658,15 +661,16 @@ class SymbolLayerProperties extends LayerProperties {
           iconRotationAlignment is IconRotationAlignment
               ? (iconRotationAlignment as IconRotationAlignment).name
               : iconRotationAlignment is List
-                  ? jsonEncode(iconRotationAlignment)
-                  : iconRotationAlignment;
+              ? jsonEncode(iconRotationAlignment)
+              : iconRotationAlignment;
     }
 
     if (iconTextFit != null &&
         (iconTextFit is IconTextFit || iconTextFit is List)) {
-      layoutArgs['icon-text-fit'] = iconTextFit is IconTextFit
-          ? (iconTextFit as IconTextFit).name
-          : iconTextFit is List
+      layoutArgs['icon-text-fit'] =
+          iconTextFit is IconTextFit
+              ? (iconTextFit as IconTextFit).name
+              : iconTextFit is List
               ? jsonEncode(iconTextFit)
               : iconTextFit;
     }
@@ -682,46 +686,51 @@ class SymbolLayerProperties extends LayerProperties {
 
     if (symbolPlacement != null &&
         (symbolPlacement is SymbolPlacement || symbolPlacement is List)) {
-      layoutArgs['symbol-placement'] = symbolPlacement is SymbolPlacement
-          ? (symbolPlacement as SymbolPlacement).key
-          : symbolPlacement is List
+      layoutArgs['symbol-placement'] =
+          symbolPlacement is SymbolPlacement
+              ? (symbolPlacement as SymbolPlacement).key
+              : symbolPlacement is List
               ? jsonEncode(symbolPlacement)
               : symbolPlacement;
     }
 
     if (symbolZOrder != null &&
         (symbolZOrder is SymbolZOrder || symbolZOrder is List)) {
-      layoutArgs['symbol-z-order'] = symbolZOrder is SymbolZOrder
-          ? (symbolZOrder as SymbolZOrder).key
-          : symbolZOrder is List
+      layoutArgs['symbol-z-order'] =
+          symbolZOrder is SymbolZOrder
+              ? (symbolZOrder as SymbolZOrder).key
+              : symbolZOrder is List
               ? jsonEncode(symbolZOrder)
               : symbolZOrder;
     }
 
     if (textAnchor != null &&
         (textAnchor is TextAnchor || textAnchor is List)) {
-      layoutArgs['text-anchor'] = textAnchor is TextAnchor
-          ? (textAnchor as TextAnchor).key
-          : textAnchor is List
+      layoutArgs['text-anchor'] =
+          textAnchor is TextAnchor
+              ? (textAnchor as TextAnchor).key
+              : textAnchor is List
               ? jsonEncode(textAnchor)
               : textAnchor;
     }
 
     if (textJustify != null &&
         (textJustify is TextJustify || textJustify is List)) {
-      layoutArgs['text-justify'] = textJustify is TextJustify
-          ? (textJustify as TextJustify).name
-          : textJustify is List
+      layoutArgs['text-justify'] =
+          textJustify is TextJustify
+              ? (textJustify as TextJustify).name
+              : textJustify is List
               ? jsonEncode(textJustify)
               : textJustify;
     }
 
     if (textOffset != null && textOffset is List) {
-      layoutArgs['text-offset'] = textOffset is List<double> ||
-              textOffset is List<int> ||
-              textOffset is List<num>
-          ? textOffset
-          : jsonEncode(textOffset);
+      layoutArgs['text-offset'] =
+          textOffset is List<double> ||
+                  textOffset is List<int> ||
+                  textOffset is List<num>
+              ? textOffset
+              : jsonEncode(textOffset);
     }
 
     if (textPitchAlignment != null &&
@@ -731,8 +740,8 @@ class SymbolLayerProperties extends LayerProperties {
           textPitchAlignment is TextPitchAlignment
               ? (textPitchAlignment as TextPitchAlignment).name
               : textPitchAlignment is List
-                  ? jsonEncode(textPitchAlignment)
-                  : textPitchAlignment;
+              ? jsonEncode(textPitchAlignment)
+              : textPitchAlignment;
     }
 
     if (textRotationAlignment != null &&
@@ -742,29 +751,32 @@ class SymbolLayerProperties extends LayerProperties {
           textRotationAlignment is TextRotationAlignment
               ? (textRotationAlignment as TextRotationAlignment).name
               : textRotationAlignment is List
-                  ? jsonEncode(textRotationAlignment)
-                  : textRotationAlignment;
+              ? jsonEncode(textRotationAlignment)
+              : textRotationAlignment;
     }
 
     if (textTransform != null &&
         (textTransform is TextTransform || textTransform is List)) {
-      layoutArgs['text-transform'] = textTransform is TextTransform
-          ? (textTransform as TextTransform).name
-          : textTransform is List
+      layoutArgs['text-transform'] =
+          textTransform is TextTransform
+              ? (textTransform as TextTransform).name
+              : textTransform is List
               ? jsonEncode(textTransform)
               : textTransform;
     }
 
     if (textVariableAnchor != null && textVariableAnchor is List) {
-      layoutArgs['text-variable-anchor'] = textVariableAnchor is List<String>
-          ? textVariableAnchor
-          : jsonEncode(textVariableAnchor);
+      layoutArgs['text-variable-anchor'] =
+          textVariableAnchor is List<String>
+              ? textVariableAnchor
+              : jsonEncode(textVariableAnchor);
     }
 
     if (textWritingMode != null && textWritingMode is List) {
-      layoutArgs['text-writing-mode'] = textWritingMode is List<String>
-          ? textWritingMode
-          : jsonEncode(textWritingMode);
+      layoutArgs['text-writing-mode'] =
+          textWritingMode is List<String>
+              ? textWritingMode
+              : jsonEncode(textWritingMode);
     }
 
     insert('visibility', visibility);
@@ -795,11 +807,12 @@ class SymbolLayerProperties extends LayerProperties {
     insert('text-opacity', textOpacity);
 
     if (iconTranslate != null && iconTranslate is List) {
-      paintArgs['icon-translate'] = iconTranslate is List<double> ||
-              iconTranslate is List<int> ||
-              iconTranslate is List<num>
-          ? iconTranslate
-          : jsonEncode(iconTranslate);
+      paintArgs['icon-translate'] =
+          iconTranslate is List<double> ||
+                  iconTranslate is List<int> ||
+                  iconTranslate is List<num>
+              ? iconTranslate
+              : jsonEncode(iconTranslate);
     }
 
     if (iconTranslateAnchor != null &&
@@ -809,16 +822,17 @@ class SymbolLayerProperties extends LayerProperties {
           iconTranslateAnchor is IconTranslateAnchor
               ? (iconTranslateAnchor as IconTranslateAnchor).name
               : iconTranslateAnchor is List
-                  ? jsonEncode(iconTranslateAnchor)
-                  : iconTranslateAnchor;
+              ? jsonEncode(iconTranslateAnchor)
+              : iconTranslateAnchor;
     }
 
     if (textTranslate != null && textTranslate is List) {
-      paintArgs['text-translate'] = textTranslate is List<double> ||
-              textTranslate is List<int> ||
-              textTranslate is List<num>
-          ? textTranslate
-          : jsonEncode(textTranslate);
+      paintArgs['text-translate'] =
+          textTranslate is List<double> ||
+                  textTranslate is List<int> ||
+                  textTranslate is List<num>
+              ? textTranslate
+              : jsonEncode(textTranslate);
     }
 
     if (textTranslateAnchor != null &&
@@ -828,8 +842,8 @@ class SymbolLayerProperties extends LayerProperties {
           textTranslateAnchor is TextTranslateAnchor
               ? (textTranslateAnchor as TextTranslateAnchor).name
               : textTranslateAnchor is List
-                  ? jsonEncode(textTranslateAnchor)
-                  : textTranslateAnchor;
+              ? jsonEncode(textTranslateAnchor)
+              : textTranslateAnchor;
     }
 
     return paintArgs;

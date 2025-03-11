@@ -60,9 +60,7 @@ class VisibleRegion {
       farRight: LatLng.fromArgs(args['far_right'] ?? args['farRight']),
       nearLeft: LatLng.fromArgs(args['near_left'] ?? args['nearLeft']),
       nearRight: LatLng.fromArgs(args['near_right'] ?? args['nearRight']),
-      latLngBounds: LatLngBounds.fromArgs(
-        args['bounds'],
-      ),
+      latLngBounds: LatLngBounds.fromArgs(args['bounds']),
     );
   }
 }

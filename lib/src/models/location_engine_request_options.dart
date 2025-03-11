@@ -156,5 +156,5 @@ enum LocationProvider {
   fused,
 
   /// Background location listening
-  passive
+  passive,
 }

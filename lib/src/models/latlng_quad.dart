@@ -44,7 +44,8 @@ class LatLngQuad {
   factory LatLngQuad.fromArgs(dynamic args) {
     if (args is! List || args.length != 4) {
       throw ArgumentError(
-          'LatLngQuad must contain exactly 4 elements: [topLeft, topRight, bottomRight, bottomLeft]');
+        'LatLngQuad must contain exactly 4 elements: [topLeft, topRight, bottomRight, bottomLeft]',
+      );
     }
     final tl = LatLng.fromArgs(args[0]);
     final tr = LatLng.fromArgs(args[1]);

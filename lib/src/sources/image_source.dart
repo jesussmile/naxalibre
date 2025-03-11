@@ -91,15 +91,11 @@ class ImageSourceProperties extends SourceProperties {
   final int? prefetchZoomDelta;
 
   /// Constructor
-  ImageSourceProperties({
-    this.prefetchZoomDelta,
-  });
+  ImageSourceProperties({this.prefetchZoomDelta});
 
   /// Getter for defaultImageSourceProperties
   static SourceProperties get defaultProperties {
-    return ImageSourceProperties(
-      prefetchZoomDelta: 4,
-    );
+    return ImageSourceProperties(prefetchZoomDelta: 4);
   }
 
   /// Method to convert ImageSourceProperties Object to Map

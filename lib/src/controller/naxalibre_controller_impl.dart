@@ -128,7 +128,9 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
   }) async {
     try {
       if (annotation is PointAnnotation) {
-        NaxaLibreLogger.logMessage("[$runtimeType.addAnnotation] => ${annotation.type}");
+        NaxaLibreLogger.logMessage(
+          "[$runtimeType.addAnnotation] => ${annotation.type}",
+        );
 
         final isExist = await isStyleImageExist(annotation.image.imageId);
 
@@ -138,7 +140,6 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
         }
       }
       NaxaLibreLogger.logMessage("[$runtimeType.addAnnotation] => 12");
-
 
       await _hostApi.addAnnotation(annotation.toArgs());
     } catch (e) {

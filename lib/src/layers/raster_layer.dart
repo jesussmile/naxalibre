@@ -250,9 +250,10 @@ class RasterLayerProperties extends LayerProperties {
     insert('raster-saturation', rasterSaturation);
 
     if (rasterResampling != null) {
-      paintArgs['raster-resampling'] = rasterResampling is RasterResampling
-          ? rasterResampling.name
-          : jsonEncode(rasterResampling);
+      paintArgs['raster-resampling'] =
+          rasterResampling is RasterResampling
+              ? rasterResampling.name
+              : jsonEncode(rasterResampling);
     }
 
     return paintArgs;

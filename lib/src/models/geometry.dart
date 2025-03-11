@@ -135,7 +135,9 @@ class Geometry {
                                   e1
                                       .map(
                                         (e2) =>
-                                            e2.map((e3) => e3.toDouble()).toList(),
+                                            e2
+                                                .map((e3) => e3.toDouble())
+                                                .toList(),
                                       )
                                       .toList(),
                             )

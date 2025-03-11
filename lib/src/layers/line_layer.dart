@@ -382,17 +382,19 @@ class LineLayerProperties extends LayerProperties {
     insert('visibility', visibility);
 
     if (lineCap != null && (lineCap is LineCap || lineCap is List)) {
-      layoutArgs['line-cap'] = lineCap is LineCap
-          ? (lineCap as LineCap).name
-          : lineCap is List
+      layoutArgs['line-cap'] =
+          lineCap is LineCap
+              ? (lineCap as LineCap).name
+              : lineCap is List
               ? jsonEncode(lineCap)
               : lineCap;
     }
 
     if (lineJoin != null && (lineJoin is LineJoin || lineJoin is List)) {
-      layoutArgs['line-join'] = lineJoin is LineJoin
-          ? (lineJoin as LineJoin).name
-          : lineJoin is List
+      layoutArgs['line-join'] =
+          lineJoin is LineJoin
+              ? (lineJoin as LineJoin).name
+              : lineJoin is List
               ? jsonEncode(lineJoin)
               : lineJoin;
     }
@@ -420,11 +422,12 @@ class LineLayerProperties extends LayerProperties {
     insert('line-pattern', linePattern);
 
     if (lineDashArray != null) {
-      paintArgs['line-dasharray'] = lineDashArray is List<double> ||
-              lineDashArray is List<int> ||
-              lineDashArray is List<num>
-          ? lineDashArray
-          : jsonEncode(lineDashArray);
+      paintArgs['line-dasharray'] =
+          lineDashArray is List<double> ||
+                  lineDashArray is List<int> ||
+                  lineDashArray is List<num>
+              ? lineDashArray
+              : jsonEncode(lineDashArray);
     }
 
     if (lineGradient != null && lineGradient is List) {
@@ -432,11 +435,12 @@ class LineLayerProperties extends LayerProperties {
     }
 
     if (lineTranslate != null) {
-      paintArgs['line-translate'] = lineTranslate is List<double> ||
-              lineTranslate is List<int> ||
-              lineTranslate is List<num>
-          ? lineTranslate
-          : jsonEncode(lineTranslate);
+      paintArgs['line-translate'] =
+          lineTranslate is List<double> ||
+                  lineTranslate is List<int> ||
+                  lineTranslate is List<num>
+              ? lineTranslate
+              : jsonEncode(lineTranslate);
     }
 
     if (lineTranslateAnchor != null &&
@@ -446,16 +450,17 @@ class LineLayerProperties extends LayerProperties {
           lineTranslateAnchor is LineTranslateAnchor
               ? (lineTranslateAnchor as LineTranslateAnchor).name
               : lineTranslateAnchor is List
-                  ? jsonEncode(lineTranslateAnchor)
-                  : lineTranslateAnchor;
+              ? jsonEncode(lineTranslateAnchor)
+              : lineTranslateAnchor;
     }
 
     if (lineTrimOffset != null) {
-      paintArgs['line-trim-offset'] = lineTrimOffset is List<double> ||
-              lineTrimOffset is List<int> ||
-              lineTrimOffset is List<num>
-          ? lineTrimOffset
-          : jsonEncode(lineTrimOffset);
+      paintArgs['line-trim-offset'] =
+          lineTrimOffset is List<double> ||
+                  lineTrimOffset is List<int> ||
+                  lineTrimOffset is List<num>
+              ? lineTrimOffset
+              : jsonEncode(lineTrimOffset);
     }
 
     return paintArgs;

@@ -24,7 +24,6 @@ class NaxaLibreWeb extends NaxaLibrePlatform {
     void Function(int id)? onPlatformViewCreated,
     HyperCompositionMode hyperCompositionMode = HyperCompositionMode.disabled,
   }) {
-    // TODO: implement buildMapView
     throw UnimplementedError();
   }
 }

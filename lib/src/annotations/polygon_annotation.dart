@@ -27,10 +27,7 @@ class PolygonAnnotation extends Annotation<PolygonAnnotationOptions> {
   /// - A json map containing the annotation options.
   @override
   Map<String, dynamic> toArgs() {
-    return <String, dynamic>{
-      "type": type,
-      "options": options.toArgs(),
-    };
+    return <String, dynamic>{"type": type, "options": options.toArgs()};
   }
 }
 

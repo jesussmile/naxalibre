@@ -29,10 +29,7 @@ class CircleAnnotation extends Annotation<CircleAnnotationOptions> {
   /// and annotation type
   @override
   Map<String, dynamic> toArgs() {
-    return <String, dynamic>{
-      "type": type,
-      "options": options.toArgs(),
-    };
+    return <String, dynamic>{"type": type, "options": options.toArgs()};
   }
 }
 

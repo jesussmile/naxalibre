@@ -22,7 +22,7 @@ enum NaxaLibreListenerKey {
   onCameraMove,
   onRotate,
   onFling,
-  onFpsChanged
+  onFpsChanged,
 }
 
 /// [NaxaLibreListeners] is a callback handler for the NaxaLibreFlutter API that manages event listeners.
@@ -55,7 +55,8 @@ class NaxaLibreListeners extends NaxaLibreFlutterApi {
           executor(listener as T);
         } catch (e) {
           NaxaLibreLogger.logError(
-              "[$runtimeType._safeExecute<$key>.executor] => $e");
+            "[$runtimeType._safeExecute<$key>.executor] => $e",
+          );
         }
       });
     } catch (e) {
@@ -64,26 +65,18 @@ class NaxaLibreListeners extends NaxaLibreFlutterApi {
   }
 
   /// Generic add listener function.
-  void add<T>(
-    NaxaLibreListenerKey key,
-    Function listener,
-  ) {
+  void add<T>(NaxaLibreListenerKey key, Function listener) {
     _listeners[key] ??= [];
     _listeners[key]!.add(listener);
   }
 
   /// Generic remove listener function.
-  void remove<T>(
-    NaxaLibreListenerKey key,
-    Function listener,
-  ) {
+  void remove<T>(NaxaLibreListenerKey key, Function listener) {
     _listeners[key]?.remove(listener);
   }
 
   /// Generic clear listener function.
-  void clear<T>(
-    NaxaLibreListenerKey key,
-  ) {
+  void clear<T>(NaxaLibreListenerKey key) {
     _listeners[key]?.clear();
   }
 
@@ -147,7 +140,9 @@ class NaxaLibreListeners extends NaxaLibreFlutterApi {
     _safeExecute<OnCameraMove>(
       NaxaLibreListenerKey.onCameraMove,
       (callback) => callback.call(
-          CameraMoveEvent.start, CameraMoveReason.fromCode(reason)),
+        CameraMoveEvent.start,
+        CameraMoveReason.fromCode(reason),
+      ),
     );
   }
 
@@ -179,7 +174,11 @@ class NaxaLibreListeners extends NaxaLibreFlutterApi {
     _safeExecute<OnRotate>(
       NaxaLibreListenerKey.onRotate,
       (callback) => callback.call(
-          RotateEvent.start, angleThreshold, deltaSinceStart, deltaSinceLast),
+        RotateEvent.start,
+        angleThreshold,
+        deltaSinceStart,
+        deltaSinceLast,
+      ),
     );
   }
 
@@ -192,8 +191,12 @@ class NaxaLibreListeners extends NaxaLibreFlutterApi {
   ) {
     _safeExecute<OnRotate>(
       NaxaLibreListenerKey.onRotate,
-      (callback) => callback.call(RotateEvent.rotating, angleThreshold,
-          deltaSinceStart, deltaSinceLast),
+      (callback) => callback.call(
+        RotateEvent.rotating,
+        angleThreshold,
+        deltaSinceStart,
+        deltaSinceLast,
+      ),
     );
   }
 
@@ -207,7 +210,11 @@ class NaxaLibreListeners extends NaxaLibreFlutterApi {
     _safeExecute<OnRotate>(
       NaxaLibreListenerKey.onRotate,
       (callback) => callback.call(
-          RotateEvent.end, angleThreshold, deltaSinceStart, deltaSinceLast),
+        RotateEvent.end,
+        angleThreshold,
+        deltaSinceStart,
+        deltaSinceLast,
+      ),
     );
   }
 

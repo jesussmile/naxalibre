@@ -19,10 +19,7 @@ class LatLngBounds {
   /// [northeast] – represents the top right corner of the bounding box
   /// when the camera is pointing due north
   ///
-  const LatLngBounds({
-    required this.southwest,
-    required this.northeast,
-  });
+  const LatLngBounds({required this.southwest, required this.northeast});
 
   /// Factory constructor method to create [LatLngBounds] from the LatLongs
   /// [west] – the left side of the bounding box when
@@ -54,7 +51,8 @@ class LatLngBounds {
   factory LatLngBounds.fromArgs(dynamic args) {
     if (args is! List || args.length != 4) {
       throw ArgumentError(
-          'bbox must contain exactly 4 elements: [west, south, east, north]');
+        'bbox must contain exactly 4 elements: [west, south, east, north]',
+      );
     }
     final west = args[0];
     final south = args[1];
@@ -75,7 +73,8 @@ class LatLngBounds {
   factory LatLngBounds.fromBBox(List<double> bbox) {
     if (bbox.length != 4) {
       throw ArgumentError(
-          'bbox must contain exactly 4 elements: [west, south, east, north]');
+        'bbox must contain exactly 4 elements: [west, south, east, north]',
+      );
     }
     final west = bbox[0];
     final south = bbox[1];
@@ -96,5 +95,4 @@ class LatLngBounds {
       "northeast": northeast.latLngList(),
     };
   }
-
 }
