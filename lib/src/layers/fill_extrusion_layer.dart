@@ -270,12 +270,12 @@ class FillExtrusionLayerProperties extends LayerProperties {
   /// Default FillExtrusionLayerProperties
   static FillExtrusionLayerProperties get defaultProperties {
     return FillExtrusionLayerProperties(
-        // heatmapIntensity: 1.0,
-        // heatmapIntensityTransition: StyleTransition.build(
-        //   delay: 275,
-        //   duration: const Duration(milliseconds: 500),
-        // ),
-        );
+      // heatmapIntensity: 1.0,
+      // heatmapIntensityTransition: StyleTransition.build(
+      //   delay: 275,
+      //   duration: const Duration(milliseconds: 500),
+      // ),
+    );
   }
 
   /// Converts the properties of the FillExtrusionLayer into a map format.
@@ -337,11 +337,15 @@ class FillExtrusionLayerProperties extends LayerProperties {
       }
     }
 
-    insert('fill-extrusion-ambient-occlusion-intensity',
-        fillExtrusionAmbientOcclusionIntensity);
+    insert(
+      'fill-extrusion-ambient-occlusion-intensity',
+      fillExtrusionAmbientOcclusionIntensity,
+    );
 
-    insert('fill-extrusion-ambient-occlusion-radius',
-        fillExtrusionAmbientOcclusionRadius);
+    insert(
+      'fill-extrusion-ambient-occlusion-radius',
+      fillExtrusionAmbientOcclusionRadius,
+    );
 
     insert('fill-extrusion-base', fillExtrusionBase);
 
@@ -364,8 +368,8 @@ class FillExtrusionLayerProperties extends LayerProperties {
           fillExtrusionTranslateAnchor is FillExtrusionTranslateAnchor
               ? fillExtrusionTranslateAnchor.name
               : fillExtrusionTranslateAnchor is List
-                  ? jsonEncode(fillExtrusionTranslateAnchor)
-                  : fillExtrusionTranslateAnchor;
+              ? jsonEncode(fillExtrusionTranslateAnchor)
+              : fillExtrusionTranslateAnchor;
     }
 
     return paintArgs;
@@ -382,10 +386,14 @@ class FillExtrusionLayerProperties extends LayerProperties {
       }
     }
 
-    insert('fill-extrusion-ambient-occlusion-intensity',
-        fillExtrusionAmbientOcclusionIntensityTransition);
-    insert('fill-extrusion-ambient-occlusion-radius',
-        fillExtrusionAmbientOcclusionRadiusTransition);
+    insert(
+      'fill-extrusion-ambient-occlusion-intensity',
+      fillExtrusionAmbientOcclusionIntensityTransition,
+    );
+    insert(
+      'fill-extrusion-ambient-occlusion-radius',
+      fillExtrusionAmbientOcclusionRadiusTransition,
+    );
     insert('fill-extrusion-base', fillExtrusionBaseTransition);
     insert('fill-extrusion-color', fillExtrusionColorTransition);
     insert('fill-extrusion-height', fillExtrusionHeightTransition);

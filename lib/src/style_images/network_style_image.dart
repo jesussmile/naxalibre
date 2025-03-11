@@ -26,11 +26,7 @@ class NetworkStyleImage extends StyleImage {
   /// A `Map<String, dynamic>` containing the image's ID, URL, and whether it is an SDF image.
   @override
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      "imageId": imageId,
-      "url": url,
-      "sdf": sdf,
-    };
+    return <String, dynamic>{"imageId": imageId, "url": url, "sdf": sdf};
   }
 
   /// Retrieves the byte array for the image from the network.

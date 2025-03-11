@@ -27,10 +27,7 @@ class PolylineAnnotation extends Annotation<PolylineAnnotationOptions> {
   /// - A json map containing the annotation options.
   @override
   Map<String, dynamic> toArgs() {
-    return <String, dynamic>{
-      "type": type,
-      "options": options.toArgs(),
-    };
+    return <String, dynamic>{"type": type, "options": options.toArgs()};
   }
 }
 

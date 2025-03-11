@@ -282,11 +282,12 @@ class FillLayerProperties extends LayerProperties {
 
     // Handle enums or lists for specific keys
     if (fillTranslate != null) {
-      paintArgs['fill-translate'] = fillTranslate is List<double> ||
-              fillTranslate is List<int> ||
-              fillTranslate is List<num>
-          ? fillTranslate
-          : jsonEncode(fillTranslate);
+      paintArgs['fill-translate'] =
+          fillTranslate is List<double> ||
+                  fillTranslate is List<int> ||
+                  fillTranslate is List<num>
+              ? fillTranslate
+              : jsonEncode(fillTranslate);
     }
 
     if (fillTranslateAnchor != null) {
@@ -294,8 +295,8 @@ class FillLayerProperties extends LayerProperties {
           fillTranslateAnchor is FillTranslateAnchor
               ? fillTranslateAnchor.name
               : fillTranslateAnchor is List
-                  ? jsonEncode(fillTranslateAnchor)
-                  : fillTranslateAnchor;
+              ? jsonEncode(fillTranslateAnchor)
+              : fillTranslateAnchor;
     }
 
     return paintArgs;

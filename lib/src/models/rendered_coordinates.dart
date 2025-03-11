@@ -25,43 +25,32 @@ class RenderedCoordinates {
   ///
   /// The generated coordinate type will be `point` with values `[x, y]`.
   factory RenderedCoordinates.fromPoint(Point<double> point) {
-    return RenderedCoordinates._(
-      [point.x, point.y],
-      'point',
-    );
+    return RenderedCoordinates._([point.x, point.y], 'point');
   }
 
   /// Creates a [RenderedCoordinates] instance from a [LatLng].
   ///
   /// The generated coordinate type will be `latLng` with values `[latitude, longitude]`.
   factory RenderedCoordinates.fromLatLng(LatLng latLng) {
-    return RenderedCoordinates._(
-      [latLng.latitude, latLng.longitude],
-      'latLng',
-    );
+    return RenderedCoordinates._([latLng.latitude, latLng.longitude], 'latLng');
   }
 
   /// Creates a [RenderedCoordinates] instance from a [Rect].
   ///
   /// The generated coordinate type will be `rect` with values `[left, top, right, bottom]`.
   factory RenderedCoordinates.fromRect(Rect rect) {
-    return RenderedCoordinates._(
-      [
-        rect.left,
-        rect.top,
-        rect.right,
-        rect.bottom,
-      ],
-      'rect',
-    );
+    return RenderedCoordinates._([
+      rect.left,
+      rect.top,
+      rect.right,
+      rect.bottom,
+    ], 'rect');
   }
 
   /// Converts the [RenderedCoordinates] instance into a map of arguments.
   ///
   /// The returned map contains the type as the key and the coordinates as the value.
   Map<String, dynamic> toArgs() {
-    return {
-      type: coordinates,
-    };
+    return {type: coordinates};
   }
 }

@@ -101,22 +101,24 @@ class CameraPosition {
   /// - `"padding"`: The padding values as a list [left, top, right, bottom].
   factory CameraPosition.fromArgs(Map<String, dynamic> args) {
     return CameraPosition(
-      target: args["target"] == null || args["target"] is! List
-          ? null
-          : LatLng.fromArgs(args["target"]),
+      target:
+          args["target"] == null || args["target"] is! List
+              ? null
+              : LatLng.fromArgs(args["target"]),
       zoom: args["zoom"],
       bearing: args["bearing"],
       tilt: args["tilt"],
-      padding: args["padding"] != null &&
-              args["padding"] is List &&
-              (args["padding"] as List).length == 4
-          ? EdgeInsets.fromLTRB(
-              args["padding"][0],
-              args["padding"][1],
-              args["padding"][2],
-              args["padding"][3],
-            )
-          : EdgeInsets.zero,
+      padding:
+          args["padding"] != null &&
+                  args["padding"] is List &&
+                  (args["padding"] as List).length == 4
+              ? EdgeInsets.fromLTRB(
+                args["padding"][0],
+                args["padding"][1],
+                args["padding"][2],
+                args["padding"][3],
+              )
+              : EdgeInsets.zero,
     );
   }
 }

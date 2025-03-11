@@ -6,9 +6,13 @@ import '../models/style_transition.dart';
 import '../style_images/style_image.dart';
 
 part 'annotation_options.dart';
+
 part 'circle_annotation.dart';
+
 part 'point_annotation.dart';
+
 part 'polygon_annotation.dart';
+
 part 'polyline_annotation.dart';
 
 /// Abstract Annotation class

@@ -17,11 +17,7 @@ class LatLng {
   /// ```dart
   /// const LatLng point = LatLng(27.7172, 85.3240, altitude: 1400);
   /// ```
-  const LatLng(
-    this.latitude,
-    this.longitude, {
-    this.altitude,
-  });
+  const LatLng(this.latitude, this.longitude, {this.altitude});
 
   /// Creates a `LatLng` instance from a dynamic argument [args].
   ///
@@ -40,11 +36,7 @@ class LatLng {
     if (args is! List || args.length < 2) {
       throw ArgumentError.value("Args is not a valid list");
     }
-    return LatLng(
-      args[0],
-      args[1],
-      altitude: args.length > 2 ? args[2] : null,
-    );
+    return LatLng(args[0], args[1], altitude: args.length > 2 ? args[2] : null);
   }
 
   /// Returns a list containing the latitude and longitude.

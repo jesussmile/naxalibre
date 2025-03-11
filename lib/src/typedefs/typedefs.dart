@@ -131,8 +131,8 @@ typedef OnCameraIdle = VoidCallback;
 ///
 /// This callback is useful for updating UI elements or executing
 /// logic based on the camera's movement state.
-typedef OnCameraMove = void Function(
-    CameraMoveEvent event, CameraMoveReason? reason);
+typedef OnCameraMove =
+    void Function(CameraMoveEvent event, CameraMoveReason? reason);
 
 /// A callback function type for handling rotation events.
 ///
@@ -165,12 +165,13 @@ typedef OnCameraMove = void Function(
 ///
 /// This callback is useful for implementing custom rotation behaviors,
 /// UI updates, or constraints based on user interactions.
-typedef OnRotate = void Function(
-  RotateEvent event,
-  double angleThreshold,
-  double deltaSinceStart,
-  double deltaSinceLast,
-);
+typedef OnRotate =
+    void Function(
+      RotateEvent event,
+      double angleThreshold,
+      double deltaSinceStart,
+      double deltaSinceLast,
+    );
 
 /// A callback function type for handling fling gestures.
 ///

@@ -41,11 +41,8 @@ class TileSet {
   /// - [tileJson]: A string representing the TileJSON version.
   /// - [tiles]: A list of strings representing tile endpoints.
   /// - [properties]: Optional properties for the tileset.
-  TileSet({
-    required this.tiles,
-    this.tileJson = "3.0.0",
-    this.properties,
-  }) : assert(tiles.isNotEmpty, "Tiles can't be empty!!");
+  TileSet({required this.tiles, this.tileJson = "3.0.0", this.properties})
+    : assert(tiles.isNotEmpty, "Tiles can't be empty!!");
 
   /// Converts the `TileSet` object to a `Map` representation.
   ///

@@ -44,9 +44,6 @@ class Light {
       throw ArgumentError('Missing required arguments: color, intensity');
     }
     NaxaLibreLogger.logMessage(args);
-    return Light(
-      color: args['color'],
-      intensity: args['intensity'],
-    );
+    return Light(color: args['color'], intensity: args['intensity']);
   }
 }

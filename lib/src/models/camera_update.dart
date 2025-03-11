@@ -32,10 +32,7 @@ class _CameraPositionUpdate extends CameraUpdate {
   /// Converts the CameraPositionUpdate object to a Map.
   @override
   Map<String, dynamic> toArgs() {
-    return {
-      "type": _type,
-      "camera_position": cameraPosition.toArgs(),
-    };
+    return {"type": _type, "camera_position": cameraPosition.toArgs()};
   }
 }
 
@@ -57,12 +54,7 @@ class _CameraBoundsUpdate extends CameraUpdate {
   final double? tilt;
 
   /// Constructor to initialize the camera bounds update with optional parameters.
-  _CameraBoundsUpdate(
-    this.bounds, {
-    this.padding,
-    this.bearing,
-    this.tilt,
-  });
+  _CameraBoundsUpdate(this.bounds, {this.padding, this.bearing, this.tilt});
 
   /// Converts the CameraBoundsUpdate object to a Map.
   @override
@@ -90,10 +82,7 @@ class _LatLngUpdate extends CameraUpdate {
   /// Converts the LatLngUpdate object to a Map.
   @override
   Map<String, dynamic> toArgs() {
-    return {
-      "type": _type,
-      "latLng": latLng.toArgs(),
-    };
+    return {"type": _type, "latLng": latLng.toArgs()};
   }
 }
 
@@ -111,10 +100,7 @@ class _ZoomUpdate extends CameraUpdate {
   /// Converts the ZoomUpdate object to a Map.
   @override
   Map<String, dynamic> toArgs() {
-    return {
-      "type": _type,
-      "zoom": zoom,
-    };
+    return {"type": _type, "zoom": zoom};
   }
 }
 
@@ -133,9 +119,7 @@ class CameraUpdateFactory {
   /// Returns:
   /// A `CameraUpdate` for the new camera position.
   static CameraUpdate newCameraPosition(CameraPosition cameraPosition) {
-    return _CameraPositionUpdate(
-      cameraPosition,
-    ).._type = "newCameraPosition";
+    return _CameraPositionUpdate(cameraPosition).._type = "newCameraPosition";
   }
 
   /// Creates a CameraUpdate to move to new camera bounds.
@@ -170,9 +154,7 @@ class CameraUpdateFactory {
   /// Returns:
   /// A `CameraUpdate` for the new LatLng.
   static CameraUpdate newLatLng(LatLng latLng) {
-    return _LatLngUpdate(
-      latLng,
-    ).._type = "newLatLng";
+    return _LatLngUpdate(latLng).._type = "newLatLng";
   }
 
   /// Creates a CameraUpdate to zoom to a specific zoom level.
@@ -183,9 +165,7 @@ class CameraUpdateFactory {
   /// Returns:
   /// A `CameraUpdate` for the new zoom level.
   static CameraUpdate zoomTo(double zoom) {
-    return _ZoomUpdate(
-      zoom,
-    ).._type = "zoomTo";
+    return _ZoomUpdate(zoom).._type = "zoomTo";
   }
 
   /// Creates a CameraUpdate to zoom by a specific amount.
@@ -196,8 +176,6 @@ class CameraUpdateFactory {
   /// Returns:
   /// A `CameraUpdate` to zoom by the specified amount.
   static CameraUpdate zoomBy(double by) {
-    return _ZoomUpdate(
-      by,
-    ).._type = "zoomBy";
+    return _ZoomUpdate(by).._type = "zoomBy";
   }
 }

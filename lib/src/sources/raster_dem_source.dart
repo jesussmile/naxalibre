@@ -30,8 +30,10 @@ class RasterDemSource extends Source<RasterDemSourceProperties> {
     this.tiles,
     this.tileSet,
     super.sourceProperties,
-  }) : assert(url != null || tiles != null || tileSet != null,
-            "Please provide url or tiles or tile set for raster dem source.");
+  }) : assert(
+         url != null || tiles != null || tileSet != null,
+         "Please provide url or tiles or tile set for raster dem source.",
+       );
 
   /// Method to convert RasterDemSource object into a map representation.
   ///

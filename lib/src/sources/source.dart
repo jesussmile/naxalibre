@@ -4,10 +4,15 @@ import '../models/latlng_quad.dart';
 import '../models/geojson.dart';
 
 part 'geojson_source.dart';
+
 part 'image_source.dart';
+
 part 'raster_source.dart';
+
 part 'raster_dem_source.dart';
+
 part 'source_properties.dart';
+
 part 'vector_source.dart';
 
 /// An abstract class representing a generic map source.
@@ -59,11 +64,7 @@ abstract class Source<T> {
   /// );
   /// print(source.sourceId);
   /// ```
-  Source({
-    required this.sourceId,
-    this.url,
-    this.sourceProperties,
-  });
+  Source({required this.sourceId, this.url, this.sourceProperties});
 
   /// Converts the `Source` object to a `Map` for platform-specific usage.
   ///

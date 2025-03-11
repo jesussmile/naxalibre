@@ -20,10 +20,8 @@ class BackgroundLayer extends Layer<BackgroundLayerProperties> {
   ///
   /// Note: The `sourceId` is set to an empty string since a BackgroundLayer does
   /// not rely on any data source.
-  BackgroundLayer({
-    required super.layerId,
-    super.layerProperties,
-  }) : super(sourceId: "", type: "background-layer");
+  BackgroundLayer({required super.layerId, super.layerProperties})
+    : super(sourceId: "", type: "background-layer");
 
   /// Method to convert the BackgroundLayer Object to the
   /// Map data to pass to the native platform through args
