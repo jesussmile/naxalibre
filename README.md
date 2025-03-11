@@ -11,7 +11,7 @@
 ## Key Features
 
 - Seamless integration with MapLibre Map SDK
-- Support for both Android (v11.8.2) and iOS (v6.11.0)
+- Support for both Android (v11.8.2) and iOS (v6.12.1)
 - Comprehensive layer support (Circle, Line, Fill, Symbol, Raster, Hillshade, Heatmap, Fill Extrusion, Background)
 - Multiple source types (Vector, Raster, RasterDem, GeoJson, Image)
 - Advanced location services
@@ -181,31 +181,108 @@ await _controller.addStyleImage<NetworkStyleImage>(
 )
 ```
 
+### 6. Adding Annotations
+
+#### Circle Annotation
+```dart
+    await controller?.addAnnotation<CircleAnnotation>(
+      annotation: CircleAnnotation(
+        options: CircleAnnotationOptions(
+          point: LatLng(27.741712, 85.331033),
+          circleColor: "red",
+          circleStrokeColor: "white",
+          circleStrokeWidth: 2.0,
+          circleRadius: 12.0,
+          circleRadiusTransition: StyleTransition.build(
+            delay: 1500,
+            duration: const Duration(milliseconds: 2000),
+          ),
+          circleColorTransition: StyleTransition.build(
+            delay: 1500,
+            duration: const Duration(milliseconds: 2000),
+          ),
+        ),
+      ),
+    );
+```
+
+#### Polygon Annotation
+```dart
+    await controller?.addAnnotation<PolygonAnnotation>(
+      annotation: PolygonAnnotation(
+        options: PolygonAnnotationOptions(
+          points: [
+            [
+              LatLng(27.741712, 85.331033),
+              LatLng(27.7420, 85.3412),
+              LatLng(27.7525, 85.3578),
+            ],
+          ],
+          fillColor: "red",
+          fillOpacity: 0.15,
+          fillOutlineColor: "blue",
+        ),
+      ),
+    );
+```
+
+#### Point Annotation
+```dart
+    await controller?.addAnnotation<PointAnnotation>(
+      annotation: PointAnnotation(
+        image: NetworkStyleImage(
+          imageId: "pointImageId",
+          url:
+              "https://www.cp-desk.com/wp-content/uploads/2019/02/map-marker-free-download-png.png",
+        ),
+        options: PointAnnotationOptions(
+          point: LatLng(27.7525, 85.3578),
+          iconSize: 0.1,
+        ),
+      ),
+    );
+```
+
+#### Polyline Annotation
+```dart
+    await controller?.addAnnotation<PolylineAnnotation>(
+      annotation: PolylineAnnotation(
+        options: PolylineAnnotationOptions(
+          points: [LatLng(27.741712, 85.331033), LatLng(27.7420, 85.3412)],
+          lineColor: "red",
+          lineWidth: 3.75,
+          lineCap: LineCap.round,
+          lineJoin: LineJoin.round,
+        ),
+      ),
+    );
+```
+
 ## Supported MapLibre API Features
 
-| Feature              | Android            | iOS                | 
-|----------------------|--------------------|--------------------| 
-| Style                | ✅                 | ✅                 | 
-| Camera               | ✅                 | ✅                 | 
-| Current Location     | ✅                 | ✅                 |
-| Circle Layer         | ✅                 | ✅                 | 
-| Line Layer           | ✅                 | ✅                 | 
-| Fill Layer           | ✅                 | ✅                 | 
-| Symbol Layer         | ✅                 | ✅                 | 
-| Raster Layer         | ✅                 | ✅                 | 
-| Hillshade Layer      | ✅                 | ✅                 | 
-| Heatmap Layer        | ✅                 | ✅                 | 
-| Fill Extrusion Layer | ✅                 | ✅                 |
-| Background Layer     | ✅                 | ✅                 |
-| Vector Source        | ✅                 | ✅                 | 
-| Raster Source        | ✅                 | ✅                 | 
-| RasterDem Source     | ✅                 | ✅                 | 
-| GeoJson Source       | ✅                 | ✅                 | 
-| Image Source         | ✅                 | ✅                 |
-| Expressions          | ✅                 | ✅                 |
-| Transitions          | ✅                 | ✅                 |
-| Annotations          | ❌                 | ❌                 |
-| Offline Manager      | ❌                 | ❌                 |
+| Feature              | Android          | iOS                | 
+|----------------------|------------------|--------------------| 
+| Style                | ✅                | ✅                 | 
+| Camera               | ✅                | ✅                 | 
+| Current Location     | ✅                | ✅                 |
+| Circle Layer         | ✅                | ✅                 | 
+| Line Layer           | ✅                | ✅                 | 
+| Fill Layer           | ✅                | ✅                 | 
+| Symbol Layer         | ✅                | ✅                 | 
+| Raster Layer         | ✅                | ✅                 | 
+| Hillshade Layer      | ✅                | ✅                 | 
+| Heatmap Layer        | ✅                | ✅                 | 
+| Fill Extrusion Layer | ✅                | ✅                 |
+| Background Layer     | ✅                | ✅                 |
+| Vector Source        | ✅                | ✅                 | 
+| Raster Source        | ✅                | ✅                 | 
+| RasterDem Source     | ✅                | ✅                 | 
+| GeoJson Source       | ✅                | ✅                 | 
+| Image Source         | ✅                | ✅                 |
+| Expressions          | ✅                | ✅                 |
+| Transitions          | ✅                | ✅                 |
+| Annotations          | ✅                | ✅                 |
+| Offline Manager      | ❌                | ❌                 |
 
 ## Limitations and Considerations
 
