@@ -52,7 +52,9 @@ class Feature {
     return Feature._(
       args['id'],
       Geometry.fromArgs(args['geometry']),
-      null, // Currently bbox is not decoded
+      args['bbox'] == List && args['bbox'].length == 4
+          ? LatLngBounds.fromArgs(args['bbox'])
+          : null,
       args['properties'],
     );
   }

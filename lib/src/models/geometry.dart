@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// An abstract class representing a geometric shape or structure.
 ///
 /// This class serves as a base for defining various geometric shapes
@@ -110,21 +112,48 @@ class Geometry {
     return {'type': type, 'coordinates': coordinates};
   }
 
-  /// Creates a [Geometry] object from a serialized json representation.
+  /// Creates a [Geometry] object from a serialized JSON representation.
   ///
-  /// This factory method is intended to be implemented by subclasses to provide
-  /// a way to deserialize a map into a specific geometric shape.
+  /// This factory method serves as an entry point for deserializing a JSON map
+  /// into a specific geometric shape. It delegates the deserialization process
+  /// to `Geometry.fromArgs`, allowing subclasses to define their own
+  /// deserialization logic.
   ///
-  /// Parameters:
-  /// - [json]: A `Map` containing the serialized properties of the geometry.
+  /// ### Parameters:
+  /// - [json]: A key-value map containing the serialized
+  ///   properties of a geometric shape, including its type and coordinates.
   ///
-  /// Returns:
-  /// A [Geometry] object representing the deserialized geometric shape.
+  /// ### Returns:
+  /// A [Geometry] instance corresponding to the deserialized geometric shape.
   ///
-  /// Throws:
-  /// - [UnsupportedError] if the `type` in the map does not match any known geometry type.
+  /// ### Throws:
+  /// - [UnsupportedError] if the `type` field in the JSON map is unrecognized or
+  ///   does not correspond to a known geometry type.
   factory Geometry.fromJson(Map<String, dynamic> json) {
     return Geometry.fromArgs(json);
+  }
+
+  /// Creates a [Geometry] object from a serialized JSON string representation.
+  ///
+  /// This factory method parses a JSON string into a map / dictionary and
+  /// then delegates the deserialization process to `Geometry.fromArgs()`.
+  ///
+  /// ### Parameters:
+  /// - [jsonString] (`String`): A string containing the serialized JSON representation
+  ///   of a geometric shape. It must be a valid JSON object.
+  ///
+  /// ### Returns:
+  /// A [Geometry] instance corresponding to the deserialized geometric shape.
+  ///
+  /// ### Throws:
+  /// - [UnsupportedError] if the input string is not a valid Geometry Json object or does not
+  ///   adhere to the expected GeoJSON format.
+  factory Geometry.fromJsonString(String jsonString) {
+    if (jsonString.startsWith('{') && jsonString.endsWith('}')) {
+      return Geometry.fromArgs(jsonDecode(jsonString));
+    }
+
+    throw UnsupportedError('Invalid Geometry GeoJson format: $jsonString');
   }
 
   /// Creates a [Geometry] object from a serialized map representation.
@@ -133,14 +162,14 @@ class Geometry {
   /// a way to deserialize a map into a specific geometric shape.
   ///
   /// Parameters:
-  /// - [args]: A `Map` containing the serialized properties of the geometry.
+  /// - [args]: A dictionary (map) containing the serialized properties of the geometry.
   ///
   /// Returns:
   /// A [Geometry] object representing the deserialized geometric shape.
   ///
   /// Throws:
   /// - [UnsupportedError] if the `type` in the map does not match any known geometry type.
-  static Geometry fromArgs(Map<String, dynamic> args) {
+  static Geometry fromArgs(dynamic args) {
     final type = args['type'];
     final coordinatesArgs = args['coordinates'];
 
