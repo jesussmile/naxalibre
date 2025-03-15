@@ -285,7 +285,7 @@ class _OfflineManagementScreenState
         "type": "MultiPolygon",
       };
 
-      final geometry = Geometry.fromArgs(geometryArgs);
+      final geometry = Geometry.fromJson(geometryArgs);
 
       final definition = OfflineGeometryRegionDefinition(
         styleUrl: mapStyle,

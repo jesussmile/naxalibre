@@ -110,6 +110,23 @@ class Geometry {
     return {'type': type, 'coordinates': coordinates};
   }
 
+  /// Creates a [Geometry] object from a serialized json representation.
+  ///
+  /// This factory method is intended to be implemented by subclasses to provide
+  /// a way to deserialize a map into a specific geometric shape.
+  ///
+  /// Parameters:
+  /// - [json]: A `Map` containing the serialized properties of the geometry.
+  ///
+  /// Returns:
+  /// A [Geometry] object representing the deserialized geometric shape.
+  ///
+  /// Throws:
+  /// - [UnsupportedError] if the `type` in the map does not match any known geometry type.
+  factory Geometry.fromJson(Map<String, dynamic> json) {
+    return Geometry.fromArgs(json);
+  }
+
   /// Creates a [Geometry] object from a serialized map representation.
   ///
   /// This factory method is intended to be implemented by subclasses to provide
