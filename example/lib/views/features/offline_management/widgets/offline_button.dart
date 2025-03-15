@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class AnimationButton extends StatelessWidget {
+class OfflineButton extends StatelessWidget {
   final String label;
   final IconData icon;
   final VoidCallback onPressed;
 
-  const AnimationButton({
+  const OfflineButton({
     super.key,
     required this.label,
     required this.icon,

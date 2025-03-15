@@ -29,14 +29,69 @@ List<Object?> wrapResponse({
   return <Object?>[error.code, error.message, error.details];
 }
 
+sealed class NaxaLibreEvent {}
+
+class IntEvent extends NaxaLibreEvent {
+  IntEvent({required this.data});
+
+  int data;
+
+  Object encode() {
+    return <Object?>[data];
+  }
+
+  static IntEvent decode(Object result) {
+    result as List<Object?>;
+    return IntEvent(data: result[0]! as int);
+  }
+}
+
+class DoubleEvent extends NaxaLibreEvent {
+  DoubleEvent({required this.data});
+
+  double data;
+
+  Object encode() {
+    return <Object?>[data];
+  }
+
+  static DoubleEvent decode(Object result) {
+    result as List<Object?>;
+    return DoubleEvent(data: result[0]! as double);
+  }
+}
+
+class StringEvent extends NaxaLibreEvent {
+  StringEvent({required this.data});
+
+  String data;
+
+  Object encode() {
+    return <Object?>[data];
+  }
+
+  static StringEvent decode(Object result) {
+    result as List<Object?>;
+    return StringEvent(data: result[0]! as String);
+  }
+}
+
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
-
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
+    } else if (value is IntEvent) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.encode());
+    } else if (value is DoubleEvent) {
+      buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else if (value is StringEvent) {
+      buffer.putUint8(131);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -45,11 +100,21 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
+      case 129:
+        return IntEvent.decode(readValue(buffer)!);
+      case 130:
+        return DoubleEvent.decode(readValue(buffer)!);
+      case 131:
+        return StringEvent.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
   }
 }
+
+const StandardMethodCodec pigeonMethodCodec = StandardMethodCodec(
+  _PigeonCodec(),
+);
 
 class NaxaLibreHostApi {
   /// Constructor for [NaxaLibreHostApi].  The [binaryMessenger] named argument is
@@ -1758,6 +1823,200 @@ class NaxaLibreHostApi {
       return;
     }
   }
+
+  Future<Map<Object?, Object?>> downloadRegion(
+    Map<String, Object?> args,
+  ) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.downloadRegion$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[args],
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as Map<Object?, Object?>?)!
+          .cast<Object?, Object?>();
+    }
+  }
+
+  Future<bool> cancelDownloadRegion(int id) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.cancelDownloadRegion$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[id],
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as bool?)!;
+    }
+  }
+
+  Future<Map<Object?, Object?>> getRegion(int id) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.getRegion$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[id],
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as Map<Object?, Object?>?)!
+          .cast<Object?, Object?>();
+    }
+  }
+
+  Future<bool> deleteRegion(int id) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.deleteRegion$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[id],
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as bool?)!;
+    }
+  }
+
+  Future<Map<int, bool>> deleteAllRegions() async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.deleteAllRegions$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as Map<Object?, Object?>?)!
+          .cast<int, bool>();
+    }
+  }
+
+  Future<List<Map<Object?, Object?>>> listRegions() async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.listRegions$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as List<Object?>?)!
+          .cast<Map<Object?, Object?>>();
+    }
+  }
 }
 
 abstract class NaxaLibreFlutterApi {
@@ -2257,4 +2516,17 @@ abstract class NaxaLibreFlutterApi {
       }
     }
   }
+}
+
+Stream<NaxaLibreEvent> streamEvents({String instanceName = ''}) {
+  if (instanceName.isNotEmpty) {
+    instanceName = '.$instanceName';
+  }
+  final EventChannel streamEventsChannel = EventChannel(
+    'dev.flutter.pigeon.naxalibre.NaxaLibreEventChannelApi.streamEvents$instanceName',
+    pigeonMethodCodec,
+  );
+  return streamEventsChannel.receiveBroadcastStream().map((dynamic event) {
+    return event as NaxaLibreEvent;
+  });
 }
