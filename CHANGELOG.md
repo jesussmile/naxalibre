@@ -1,3 +1,7 @@
+## 0.0.6
+
+* Fixes issues arise while downloading offline region using geometry
+
 ## 0.0.5
 
 * Added support for offline regions
