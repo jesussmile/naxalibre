@@ -153,13 +153,23 @@ object SourceArgsParser {
                 }
 
                 return VectorSource(id = sourceId, tileSet = tileSet).apply {
-                    if (volatile != null) isVolatile = volatile
-                    if (zoomDelta != null) prefetchZoomDelta = zoomDelta.toInt()
-                    if (tileUpdateInterval != null) minimumTileUpdateInterval =
-                        tileUpdateInterval.toLong()
-                    if (maxOverScaleFactor != null) maxOverscaleFactorForParentTiles =
-                        maxOverScaleFactor.toInt()
+                    volatile?.let {
+                        isVolatile = it
+                    }
 
+                    zoomDelta?.let {
+                        prefetchZoomDelta = it.toInt()
+                    }
+
+                    tileUpdateInterval?.let {
+                        minimumTileUpdateInterval =
+                            it.toLong()
+                    }
+
+                    maxOverScaleFactor?.let {
+                        maxOverscaleFactorForParentTiles =
+                            it.toInt()
+                    }
                 }
 
             }
@@ -236,13 +246,23 @@ object SourceArgsParser {
                 }
 
                 return source.apply {
-                    if (volatile != null) isVolatile = volatile
-                    if (zoomDelta != null) prefetchZoomDelta = zoomDelta.toInt()
-                    if (tileUpdateInterval != null) minimumTileUpdateInterval =
-                        tileUpdateInterval.toLong()
-                    if (maxOverScaleFactor != null) maxOverscaleFactorForParentTiles =
-                        maxOverScaleFactor.toInt()
+                    volatile?.let {
+                        isVolatile = it
+                    }
 
+                    zoomDelta?.let {
+                        prefetchZoomDelta = it.toInt()
+                    }
+
+                    tileUpdateInterval?.let {
+                        minimumTileUpdateInterval =
+                            it.toLong()
+                    }
+
+                    maxOverScaleFactor?.let {
+                        maxOverscaleFactorForParentTiles =
+                            it.toInt()
+                    }
                 }
             }
 
@@ -319,13 +339,23 @@ object SourceArgsParser {
                 }
 
                 return source.apply {
-                    if (volatile != null) isVolatile = volatile
-                    if (zoomDelta != null) prefetchZoomDelta = zoomDelta.toInt()
-                    if (tileUpdateInterval != null) minimumTileUpdateInterval =
-                        tileUpdateInterval.toLong()
-                    if (maxOverScaleFactor != null) maxOverscaleFactorForParentTiles =
-                        maxOverScaleFactor.toInt()
+                    volatile?.let {
+                        isVolatile = it
+                    }
 
+                    zoomDelta?.let {
+                        prefetchZoomDelta = it.toInt()
+                    }
+
+                    tileUpdateInterval?.let {
+                        minimumTileUpdateInterval =
+                            it.toLong()
+                    }
+
+                    maxOverScaleFactor?.let {
+                        maxOverscaleFactorForParentTiles =
+                            it.toInt()
+                    }
                 }
             }
 
