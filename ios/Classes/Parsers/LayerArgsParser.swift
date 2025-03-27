@@ -146,6 +146,6 @@ fileprivate enum NaxaLibreLayerType: String {
     case raster = "raster-layer"
     case fillExtrusion = "fill-extrusion-layer"
     case heatmap = "heatmap-layer"
-    case hillshade = "hillshade-layer"
+    case hillshade = "hill-shade-layer"
     case background = "background-layer"
 }

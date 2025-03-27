@@ -116,23 +116,26 @@ class SourceArgsParser {
     
     private static func createRasterSource(sourceId: String, details: [String: Any], properties: [String: Any]?) throws -> MLNRasterTileSource {
         let url = details["url"] as? String
-        let tilesArgs = details["tiles"] as? [String]
         let tileSetArgs = details["tileSet"] as? [String: Any]
         
-        guard url != nil || !tilesArgs.isNil || (!tileSetArgs.isNil && (tileSetArgs?["tiles"] as? [String]) != nil) else {
+        guard url != nil || (!tileSetArgs.isNil && (tileSetArgs?["tiles"] as? [String]) != nil) else {
             throw NSError(domain: "Invalid raster tile source", code: 1001, userInfo: nil)
         }
         
-        let tiles: [URL]
-        if let tilesArray = tilesArgs {
-            tiles = tilesArray.compactMap { URL(string: $0) }
-        } else if let tileSetTiles = tileSetArgs?["tiles"] as? [String] {
+        var tiles: [URL] = []
+        if let tileSetTiles = tileSetArgs?["tiles"] as? [String] {
             tiles = tileSetTiles.compactMap { URL(string: $0) }
-        } else {
-            tiles = [URL(string: url!)].compactMap { $0 }
         }
         
         let options = tileSourceOptions(with: properties)
+        
+        if let url = url, let tileURL = URL(string: url) {
+            return MLNRasterTileSource(
+                identifier: sourceId,
+                configurationURL: tileURL,
+                tileSize: options[.tileSize] as! CGFloat
+            )
+        }
         
         return MLNRasterTileSource(
             identifier: sourceId,
@@ -143,23 +146,26 @@ class SourceArgsParser {
     
     private static func createRasterDemSource(sourceId: String, details: [String: Any], properties: [String: Any]?) throws -> MLNRasterDEMSource {
         let url = details["url"] as? String
-        let tilesArgs = details["tiles"] as? [String]
         let tileSetArgs = details["tileSet"] as? [String: Any]
         
-        guard url != nil || !tilesArgs.isNil || (!tileSetArgs.isNil && (tileSetArgs?["tiles"] as? [String]) != nil) else {
+        guard url != nil || (!tileSetArgs.isNil && (tileSetArgs?["tiles"] as? [String]) != nil) else {
             throw NSError(domain: "Invalid RasterDEMSource source", code: 1001, userInfo: nil)
         }
         
-        let tiles: [URL]
-        if let tilesArray = tilesArgs {
-            tiles = tilesArray.compactMap { URL(string: $0) }
-        } else if let tileSetTiles = tileSetArgs?["tiles"] as? [String] {
+        var tiles: [URL] = []
+        if let tileSetTiles = tileSetArgs?["tiles"] as? [String] {
             tiles = tileSetTiles.compactMap { URL(string: $0) }
-        } else {
-            tiles = [URL(string: url!)].compactMap { $0 }
         }
         
         let options = tileSourceOptions(with: properties)
+        
+        if let url = url, let tileURL = URL(string: url) {
+            return MLNRasterDEMSource(
+                identifier: sourceId,
+                configurationURL: tileURL,
+                tileSize: options[.tileSize] as! CGFloat
+            )
+        }
         
         return MLNRasterDEMSource(
             identifier: sourceId,
@@ -251,7 +257,9 @@ class SourceArgsParser {
             }
             
             if let tileSize = properties["tileSize"] as? Int {
-                options[.tileSize] = tileSize
+                options[.tileSize] = CGFloat(tileSize)
+            } else {
+                options[.tileSize] = CGFloat(256)
             }
             
             if let scheme = properties["scheme"] as? String {
