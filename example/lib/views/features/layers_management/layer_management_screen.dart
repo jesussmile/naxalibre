@@ -52,6 +52,10 @@ class _LayerManagementScreenState
                 label: "Add Hillshade Layer",
                 onPressed: () => _addHillShadeLayer(),
               ),
+              LayerButton(
+                label: "Add Vector Layer",
+                onPressed: () => _addVectorLayer(),
+              ),
             ],
           ),
         ),
@@ -332,7 +336,7 @@ class _LayerManagementScreenState
         sourceProperties: RasterDemSourceProperties(
           tileSize: 256,
           encoding: Encoding.mapbox,
-        )
+        ),
       ),
     );
 
@@ -340,9 +344,7 @@ class _LayerManagementScreenState
       layer: HillShadeLayer(
         layerId: "hillShadeLayerId",
         sourceId: "hillShadeSourceId",
-        layerProperties: HillShadeLayerProperties(
-          hillShadeShadowColor: 'grey'
-        ),
+        layerProperties: HillShadeLayerProperties(hillShadeShadowColor: 'grey'),
       ),
     );
 
@@ -351,5 +353,41 @@ class _LayerManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Hill shade layer added')));
+  }
+
+  Future<void> _addVectorLayer() async {
+    await controller?.addSource<VectorSource>(
+      source: VectorSource(
+        sourceId: "vectorSourceId",
+        url:
+            "https://dma-dev.naxa.com.np/api/v1/tile/building-vector-tile/{z}/{x}/{y}/?cache=true",
+        sourceProperties: VectorSourceProperties(),
+      ),
+    );
+
+    await controller?.addLayer<LineLayer>(
+      layer: LineLayer(
+        layerId: "vectorLineLayerId",
+        sourceId: "vectorSourceId",
+        layerProperties: LineLayerProperties(lineColor: 'red', lineWidth: 2.0),
+      ),
+    );
+
+    await controller?.addLayer<FillLayer>(
+      layer: FillLayer(
+        layerId: "vectorFillLayerId",
+        sourceId: "vectorSourceId",
+        layerProperties: FillLayerProperties(
+          fillColor: 'blue',
+          fillOpacity: 0.5,
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Vector layer added')));
   }
 }
