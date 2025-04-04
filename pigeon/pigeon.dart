@@ -139,7 +139,9 @@ abstract class NaxaLibreHostApi {
 
   void addSource(Map<String, Object?> source);
 
-  void addAnnotation(Map<String, Object?> annotation);
+  Map<String, Object?> addAnnotation(Map<String, Object?> annotation);
+
+  Map<String, Object?>? getAnnotation(int id);
 
   bool removeLayer(String id);
 
@@ -148,6 +150,10 @@ abstract class NaxaLibreHostApi {
   bool removeSource(String id);
 
   void removeImage(String name);
+
+  void removeAnnotation(Map<String, Object?> args);
+
+  void removeAllAnnotations(Map<String, Object?> args);
 
   Uint8List getImage(String id);
 
@@ -190,6 +196,18 @@ abstract class NaxaLibreFlutterApi {
   void onMapClick(List<double> latLng);
 
   void onMapLongClick(List<double> latLng);
+
+  void onAnnotationClick(Map<String, Object?> annotation);
+
+  void onAnnotationLongClick(Map<String, Object?> annotation);
+
+  void onAnnotationDrag(
+    int id,
+    String type,
+    Map<String, Object?> geometry,
+    Map<String, Object?> updatedGeometry,
+    String event,
+  );
 
   void onCameraIdle();
 

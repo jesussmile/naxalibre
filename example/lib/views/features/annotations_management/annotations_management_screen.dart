@@ -72,6 +72,12 @@ class _LayerManagementScreenState
             delay: 1500,
             duration: const Duration(milliseconds: 2000),
           ),
+          data: {
+            "name": "Circle Annotation",
+            "description": "This is a circle annotation",
+            "taskId": 11,
+          },
+          draggable: true,
         ),
       ),
     );
@@ -92,6 +98,7 @@ class _LayerManagementScreenState
           lineWidth: 3.75,
           lineCap: LineCap.round,
           lineJoin: LineJoin.round,
+          draggable: true,
         ),
       ),
     );
@@ -117,6 +124,7 @@ class _LayerManagementScreenState
           fillColor: "red",
           fillOpacity: 0.15,
           fillOutlineColor: "blue",
+          draggable: true,
         ),
       ),
     );
@@ -139,6 +147,7 @@ class _LayerManagementScreenState
         options: PointAnnotationOptions(
           point: LatLng(27.7525, 85.3578),
           iconSize: 0.1,
+          draggable: true,
         ),
       ),
     );
@@ -148,5 +157,38 @@ class _LayerManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Point annotation added')));
+  }
+
+  @override
+  void onControllerReady(NaxaLibreController? controller) {
+    super.onControllerReady(controller);
+
+    // Click listener
+    controller?.addOnAnnotationClickListener((annotation) {
+      debugPrint("[Clicked] $annotation");
+    });
+
+    // Long click listener
+    controller?.addOnAnnotationLongClickListener((annotation) {
+      debugPrint("[LongClicked] $annotation");
+    });
+
+    // Drag listener
+    controller?.addOnAnnotationDragListener((
+      id,
+      type,
+      annotation,
+      updated,
+      event,
+    ) {
+      debugPrint("[$type][Drag($id)][${event.name}] $annotation, $updated");
+    });
+  }
+
+  @override
+  void dispose() {
+    controller?.clearOnAnnotationClickListeners();
+    controller?.clearOnAnnotationLongClickListeners();
+    super.dispose();
   }
 }

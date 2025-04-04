@@ -18,6 +18,9 @@ enum NaxaLibreListenerKey {
   onStyleLoaded,
   onMapClick,
   onMapLongClick,
+  onAnnotationClick,
+  onAnnotationLongClick,
+  onAnnotationDrag,
   onCameraIdle,
   onCameraMove,
   onRotate,
@@ -122,6 +125,54 @@ class NaxaLibreListeners extends NaxaLibreFlutterApi {
     _safeExecute<OnMapLongClick>(
       NaxaLibreListenerKey.onMapLongClick,
       (callback) => callback.call(LatLng.fromArgs(latLng)),
+    );
+  }
+
+  /// Callback when an annotation is clicked.
+  @override
+  void onAnnotationClick(Map<String, Object?> annotation) {
+    _safeExecute<OnAnnotationClick>(
+      NaxaLibreListenerKey.onAnnotationClick,
+      (callback) => callback.call({
+        ...annotation,
+        "id": num.tryParse(annotation["id"].toString())?.toInt(),
+      }),
+    );
+  }
+
+  /// Callback when an annotation is long-clicked.
+  @override
+  void onAnnotationLongClick(Map<String, Object?> annotation) {
+    _safeExecute<OnAnnotationLongClick>(
+      NaxaLibreListenerKey.onAnnotationLongClick,
+      (callback) => callback.call({
+        ...annotation,
+        "id": num.tryParse(annotation["id"].toString())?.toInt(),
+      }),
+    );
+  }
+
+  /// Callback when an annotation is dragged.
+  @override
+  void onAnnotationDrag(
+    int id,
+    String type,
+    Map<String, Object?> geometry,
+    Map<String, Object?> updatedGeometry,
+    String event,
+  ) {
+    _safeExecute<OnAnnotationDrag>(
+      NaxaLibreListenerKey.onAnnotationDrag,
+      (callback) => callback.call(
+        id,
+        type,
+        {"id": num.tryParse(geometry["id"].toString())?.toInt(), ...geometry},
+        {
+          "id": num.tryParse(updatedGeometry["id"].toString())?.toInt(),
+          ...updatedGeometry,
+        },
+        AnnotationDragEvent.fromStr(event),
+      ),
     );
   }
 

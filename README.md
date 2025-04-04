@@ -11,7 +11,7 @@
 ## Key Features
 
 - Seamless integration with MapLibre Map SDK
-- Support for both Android (v11.8.2) and iOS (v6.12.1)
+- Support for both Android (v11.8.5) and iOS (v6.12.2)
 - Comprehensive layer support (Circle, Line, Fill, Symbol, Raster, Hillshade, Heatmap, Fill Extrusion, Background)
 - Multiple source types (Vector, Raster, RasterDem, GeoJson, Image)
 - Advanced location services
@@ -392,7 +392,6 @@ await _controller.addStyleImage<NetworkStyleImage>(
 
 - SVG images are currently not supported
 - Ensure proper location permissions are set for location-based features
-- Annotation dragging is not supporting yet
 
 ## Contributing
 

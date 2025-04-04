@@ -12,6 +12,7 @@ import MapLibre
 class NaxaLibreListeners: NSObject, MLNMapViewDelegate, UIGestureRecognizerDelegate {
     private let binaryMessenger: FlutterBinaryMessenger
     private let libreView: MLNMapView
+    private let libreAnnotationsManager: NaxaLibreAnnotationsManager
     private let args: Any?
     
     // MARK: NaxaLibreFlutterApi
@@ -19,9 +20,10 @@ class NaxaLibreListeners: NSObject, MLNMapViewDelegate, UIGestureRecognizerDeleg
     private lazy var flutterApi = NaxaLibreFlutterApi(binaryMessenger: binaryMessenger)
     
     // MARK: Initialization / Constructor
-    init(binaryMessenger: FlutterBinaryMessenger, libreView: MLNMapView, args: Any?) {
+    init(binaryMessenger: FlutterBinaryMessenger, libreView: MLNMapView, libreAnnotationsManager: NaxaLibreAnnotationsManager, args: Any?) {
         self.binaryMessenger = binaryMessenger
         self.libreView = libreView
+        self.libreAnnotationsManager = libreAnnotationsManager
         self.args = args
         super.init()
     }
@@ -57,7 +59,7 @@ class NaxaLibreListeners: NSObject, MLNMapViewDelegate, UIGestureRecognizerDeleg
     // Method to register tap gestures
     // In this method single and long tap gesture are registered
     private func registerTapGestures() {
-        longTap.minimumPressDuration = 0.5
+        longTap.minimumPressDuration = 0.1
         
         if let existingRecognizers = libreView.gestureRecognizers {
             for recognizer in existingRecognizers {
@@ -89,6 +91,14 @@ class NaxaLibreListeners: NSObject, MLNMapViewDelegate, UIGestureRecognizerDeleg
     @objc private func handleMapTap(sender: UITapGestureRecognizer) {
         guard let view = sender.view as? MLNMapView else { return }
         let point = sender.location(in: view)
+        
+        let (annotationAtLatLng, properties) = libreAnnotationsManager.isAnnotationAtPoint(point)
+        
+        if annotationAtLatLng {
+            flutterApi.onAnnotationClick(annotation: properties!, completion: { _ in })
+            return
+        }
+        
         let latLng = view.convert(point, toCoordinateFrom: nil)
         flutterApi.onMapClick(latLng: [latLng.latitude, latLng.longitude], completion: { _ in })
     }
@@ -98,6 +108,32 @@ class NaxaLibreListeners: NSObject, MLNMapViewDelegate, UIGestureRecognizerDeleg
         if sender.state == .began {
             guard let view = sender.view as? MLNMapView else { return }
             let point = sender.location(in: view)
+            
+            let (annotationAtLatLng, properties) = libreAnnotationsManager.isAnnotationAtPoint(point)
+            
+            if annotationAtLatLng {
+                
+                if libreAnnotationsManager.isDraggable(properties) {
+                    
+                    libreAnnotationsManager.removeAnnotationDragListeners()
+                    libreAnnotationsManager.addAnnotationDragListener { id, type, annotation, updatedAnnotation, event in
+                        self.flutterApi.onAnnotationDrag(
+                            id: id,
+                            type: type.rawValue,
+                            geometry: annotation.toGeometryJson(),
+                            updatedGeometry: updatedAnnotation.toGeometryJson(),
+                            event: event,
+                            completion: {_ in }
+                        )
+                    }
+                    
+                    libreAnnotationsManager.handleDragging(properties!)
+                }
+                
+                flutterApi.onAnnotationLongClick(annotation: properties!, completion: { _ in })
+                return
+            }
+            
             let latLng = view.convert(point, toCoordinateFrom: nil)
             flutterApi.onMapLongClick(latLng: [latLng.latitude, latLng.longitude], completion: { _ in })
         }
@@ -110,7 +146,7 @@ class NaxaLibreListeners: NSObject, MLNMapViewDelegate, UIGestureRecognizerDeleg
             for recognizer in existingRecognizers {
                 // Handle existing pan recognizers
                 if let panRecognizer = recognizer as? UIPanGestureRecognizer {
-                    singleTap.require(toFail: panRecognizer)
+                    dragGesture.require(toFail: panRecognizer)
                 }
             }
         }
@@ -156,7 +192,7 @@ class NaxaLibreListeners: NSObject, MLNMapViewDelegate, UIGestureRecognizerDeleg
             for recognizer in existingRecognizers {
                 // Handle existing rotation recognizers
                 if let rotationRecognizer = recognizer as? UIRotationGestureRecognizer {
-                    singleTap.require(toFail: rotationRecognizer)
+                    rotationGesture.require(toFail: rotationRecognizer)
                 }
             }
         }

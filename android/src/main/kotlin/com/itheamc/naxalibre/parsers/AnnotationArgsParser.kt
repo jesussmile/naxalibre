@@ -2,6 +2,7 @@ package com.itheamc.naxalibre.parsers
 
 import com.itheamc.naxalibre.NaxaLibreAnnotationsManager
 import com.itheamc.naxalibre.NaxaLibreAnnotationsManager.AnnotationType
+import com.itheamc.naxalibre.utils.IdUtils
 import org.maplibre.android.style.expressions.Expression
 import org.maplibre.android.style.layers.CircleLayer
 import org.maplibre.android.style.layers.FillLayer
@@ -38,7 +39,7 @@ object AnnotationArgsParser {
                         ) else it.toString()
                     }
                 )
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 null
             }
         }
@@ -48,7 +49,7 @@ object AnnotationArgsParser {
         if (type == null) throw Exception("Invalid annotation type")
 
         // Creating dynamic annotation id as per the timestamp of creation + hashcode
-        val id = System.currentTimeMillis() + args.hashCode()
+        val id = IdUtils.rand5() + IdUtils.rand4()
 
         // Creating layerId based on generated id
         val layerId = "libre_annotation_layer_$id"
@@ -72,13 +73,15 @@ object AnnotationArgsParser {
         val data = (annotationOptions?.get("data") as? Map<*, *>)?.mapKeys { it.key.toString() }
 
         // Getting the draggable property from the annotation options
-        val draggable = (annotationOptions?.get("draggable") as Boolean?) ?: false
+        val draggable = (annotationOptions?.get("draggable") as Boolean?) == true
 
         // Creating the layer based on the type
         val layer = when (type) {
             AnnotationType.Symbol -> {
                 val modifiedLayoutArgs = layoutArgs?.toMutableMap()
-                modifiedLayoutArgs?.set("icon-image", "${annotationOptions?.get("icon-image")}")
+                annotationOptions?.let {
+                    modifiedLayoutArgs?.set("icon-image", "${it["icon-image"]}")
+                }
 
                 SymbolLayer(layerId, sourceId).apply {
                     when {

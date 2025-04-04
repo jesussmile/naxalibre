@@ -123,27 +123,76 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
   }
 
   @override
-  Future<void> addAnnotation<T extends Annotation>({
+  Future<Map<String, Object?>?> addAnnotation<T extends Annotation>({
     required T annotation,
   }) async {
     try {
       if (annotation is PointAnnotation) {
-        NaxaLibreLogger.logMessage(
-          "[$runtimeType.addAnnotation] => ${annotation.type}",
-        );
-
         final isExist = await isStyleImageExist(annotation.image.imageId);
 
         if (!isExist) {
-          NaxaLibreLogger.logMessage("[$runtimeType.addAnnotation] => 11");
           await addStyleImage(image: annotation.image);
         }
       }
-      NaxaLibreLogger.logMessage("[$runtimeType.addAnnotation] => 12");
 
-      await _hostApi.addAnnotation(annotation.toArgs());
+      final response = await _hostApi.addAnnotation(annotation.toArgs());
+
+      return {
+        ...response,
+        "id": num.tryParse(response["id"].toString())?.toInt(),
+      };
     } catch (e) {
       NaxaLibreLogger.logError("[$runtimeType.addAnnotation] => $e");
+      return null;
+    }
+  }
+
+  @override
+  Future<bool> removeAnnotation<T extends Annotation>(int annotationId) async {
+    try {
+      final args = <String, Object?>{
+        "id": annotationId,
+        "type":
+            T == CircleAnnotation
+                ? "Circle"
+                : T == PointAnnotation
+                ? "Symbol"
+                : T == PolylineAnnotation
+                ? "Polyline"
+                : T == PolygonAnnotation
+                ? "Polygon"
+                : "Unknown",
+      };
+
+      await _hostApi.removeAnnotation(args);
+      return true;
+    } catch (e) {
+      NaxaLibreLogger.logError("[$runtimeType.removeAnnotation] => $e");
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> removeAllAnnotations<T extends Annotation>() async {
+    try {
+      final args = <String, Object?>{
+        "type":
+            T == CircleAnnotation
+                ? "Circle"
+                : T == PointAnnotation
+                ? "Symbol"
+                : T == PolylineAnnotation
+                ? "Polyline"
+                : T == PolygonAnnotation
+                ? "Polygon"
+                : "Unknown",
+      };
+
+      await _hostApi.removeAllAnnotations(args);
+      return true;
+    } catch (e) {
+      NaxaLibreLogger.logError("[$runtimeType.removeAllAnnotations] => $e");
+      return false;
     }
   }
 
@@ -380,6 +429,17 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
       return image;
     } catch (e) {
       NaxaLibreLogger.logError("[$runtimeType.getImage] => $e");
+      return null;
+    }
+  }
+
+  @override
+  Future<Map<String, Object?>?> getAnnotation(int id) async {
+    try {
+      final annotation = await _hostApi.getAnnotation(id);
+      return annotation;
+    } catch (e) {
+      NaxaLibreLogger.logError("[$runtimeType.getAnnotation] => $e");
       return null;
     }
   }
@@ -843,6 +903,18 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
       _listeners.add(NaxaLibreListenerKey.onMapLongClick, listener);
 
   @override
+  void addOnAnnotationClickListener(OnAnnotationClick listener) =>
+      _listeners.add(NaxaLibreListenerKey.onAnnotationClick, listener);
+
+  @override
+  void addOnAnnotationLongClickListener(OnAnnotationLongClick listener) =>
+      _listeners.add(NaxaLibreListenerKey.onAnnotationLongClick, listener);
+
+  @override
+  void addOnAnnotationDragListener(OnAnnotationDrag listener) =>
+      _listeners.add(NaxaLibreListenerKey.onAnnotationDrag, listener);
+
+  @override
   void addOnCameraIdleListener(OnCameraIdle listener) =>
       _listeners.add(NaxaLibreListenerKey.onCameraIdle, listener);
 
@@ -883,6 +955,18 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
       _listeners.remove(NaxaLibreListenerKey.onMapLongClick, listener);
 
   @override
+  void removeOnAnnotationClickListener(OnAnnotationClick listener) =>
+      _listeners.remove(NaxaLibreListenerKey.onAnnotationClick, listener);
+
+  @override
+  void removeOnAnnotationLongClickListener(OnAnnotationLongClick listener) =>
+      _listeners.remove(NaxaLibreListenerKey.onAnnotationLongClick, listener);
+
+  @override
+  void removeOnAnnotationDragListener(OnAnnotationDrag listener) =>
+      _listeners.remove(NaxaLibreListenerKey.onAnnotationDrag, listener);
+
+  @override
   void removeOnCameraIdleListener(OnCameraIdle listener) =>
       _listeners.remove(NaxaLibreListenerKey.onCameraIdle, listener);
 
@@ -921,6 +1005,18 @@ class NaxaLibreControllerImpl extends NaxaLibreController {
   @override
   void clearOnMapLongClickListeners() =>
       _listeners.clear(NaxaLibreListenerKey.onMapLongClick);
+
+  @override
+  void clearOnAnnotationClickListeners() =>
+      _listeners.clear(NaxaLibreListenerKey.onAnnotationClick);
+
+  @override
+  void clearOnAnnotationLongClickListeners() =>
+      _listeners.clear(NaxaLibreListenerKey.onAnnotationLongClick);
+
+  @override
+  void clearOnAnnotationDragListeners() =>
+      _listeners.clear(NaxaLibreListenerKey.onAnnotationDrag);
 
   @override
   void clearOnCameraIdleListeners() =>

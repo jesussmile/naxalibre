@@ -106,7 +106,19 @@ abstract class NaxaLibreController {
   /// *   [PolygonAnnotation]
   ///
   /// Make sure the annotation properties are valid.
-  Future<void> addAnnotation<T extends Annotation>({required T annotation});
+  Future<Map<String, Object?>?> addAnnotation<T extends Annotation>({
+    required T annotation,
+  });
+
+  /// Removes a previously added annotations from the map.
+  ///
+  /// [annotationId]: The ID of the annotation to be removed.
+  Future<bool> removeAnnotation<T extends Annotation>(int annotationId);
+
+  /// Removes a previously added annotations from the map.
+  ///
+  /// [annotationId]: The ID of the annotation to be removed.
+  Future<bool> removeAllAnnotations<T extends Annotation>();
 
   /// Adds a style layer in the map.
   ///
@@ -504,6 +516,13 @@ abstract class NaxaLibreController {
   ///   image is not found.
   Future<Uint8List?> getImage(String id);
 
+  /// Retrieves an annotation by its ID.
+  ///
+  /// - [id]: The ID of the annotation.
+  /// - Returns: A [Future] that resolves to the annotation as a dictionary / map, or `null` if the
+  ///   annotation is not found.
+  Future<Map<String, Object?>?> getAnnotation(int id);
+
   ///-----------------------------------------------------------------------
   /// Methods from NaxaLibreFlutterHostApi
   ///-----------------------------------------------------------------------
@@ -532,6 +551,21 @@ abstract class NaxaLibreController {
   ///
   /// - [listener]: The listener to add.
   void addOnMapLongClickListener(OnMapLongClick listener);
+
+  /// Adds a listener that is triggered when an annotation is clicked.
+  ///
+  /// - [listener]: The listener to add.
+  void addOnAnnotationClickListener(OnAnnotationClick listener);
+
+  /// Adds a listener that is triggered when an annotation is long-clicked.
+  ///
+  /// - [listener]: The listener to add.
+  void addOnAnnotationLongClickListener(OnAnnotationLongClick listener);
+
+  /// Adds a listener that is triggered when an annotation is dragged.
+  ///
+  /// - [listener]: The listener to add.
+  void addOnAnnotationDragListener(OnAnnotationDrag listener);
 
   /// Adds a listener that is triggered when the camera becomes idle.
   ///
@@ -583,6 +617,21 @@ abstract class NaxaLibreController {
   /// - [listener]: The listener to remove.
   void removeOnMapLongClickListener(OnMapLongClick listener);
 
+  /// Removes a previously added annotation click listener.
+  ///
+  /// - [listener]: The listener to remove.
+  void removeOnAnnotationClickListener(OnAnnotationClick listener);
+
+  /// Removes a previously added annotation long-click listener.
+  ///
+  /// - [listener]: The listener to remove.
+  void removeOnAnnotationLongClickListener(OnAnnotationLongClick listener);
+
+  /// Removes a previously added annotation drag listener.
+  ///
+  /// - [listener]: The listener to remove.
+  void removeOnAnnotationDragListener(OnAnnotationDrag listener);
+
   /// Removes a previously added camera idle listener.
   ///
   /// - [listener]: The listener to remove.
@@ -622,6 +671,15 @@ abstract class NaxaLibreController {
 
   /// Clears all the map long-click listeners.
   void clearOnMapLongClickListeners();
+
+  /// Clears all the annotation click listeners.
+  void clearOnAnnotationClickListeners();
+
+  /// Clears all the annotation long-click listeners.
+  void clearOnAnnotationLongClickListeners();
+
+  /// Clears all the annotation drag listeners.
+  void clearOnAnnotationDragListeners();
 
   /// Clears all the camera idle listeners.
   void clearOnCameraIdleListeners();

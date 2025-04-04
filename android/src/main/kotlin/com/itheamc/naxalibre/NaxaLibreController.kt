@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.graphics.RectF
+import android.util.Log
 import android.view.Gravity
 import androidx.core.app.ActivityCompat
 import com.itheamc.naxalibre.parsers.CameraUpdateArgsParser
@@ -73,7 +74,14 @@ class NaxaLibreController(
      * @see libreView A view component associated with the Libre sensor (if applicable).
      * @see libreMap A map component associated with the Libre sensor (if applicable).
      */
-    val libreListeners by lazy { NaxaLibreListeners(binaryMessenger, libreView, libreMap) }
+    val libreListeners by lazy {
+        NaxaLibreListeners(
+            binaryMessenger,
+            libreView,
+            libreMap,
+            libreAnnotationsManager
+        )
+    }
 
     /**
      * Provides access to the NaxaLibre offline management functionality.
@@ -97,12 +105,9 @@ class NaxaLibreController(
      * [libreAnnotationsManager] is a lazy-initialized property that provides an instance of [NaxaLibreAnnotationsManager].
      *
      * This manager is responsible for handling the creation, modification, and management of annotations
-     * (e.g., markers, polygons, polylines) on the map. It interacts with the Flutter side via the provided
-     * [BinaryMessenger] to communicate changes and receive instructions.
+     * (e.g., markers, polygons, polylines) on the map.
      *
      * The manager requires several dependencies to function:
-     *   - [binaryMessenger]: The [BinaryMessenger] used for communication with the Flutter framework.
-     *   - [activity]: The [Activity] context, needed for accessing resources and other system services.
      *   - [libreView]: The underlying view associated with Libre. (Replace 'Any' type with the correct one).
      *   - [libreMap]: The [MapView] from osmdroid on which the annotations will be displayed.
      *
@@ -111,8 +116,6 @@ class NaxaLibreController(
      */
     private val libreAnnotationsManager by lazy {
         NaxaLibreAnnotationsManager(
-            binaryMessenger,
-            activity,
             libreView,
             libreMap
         )
@@ -933,11 +936,26 @@ class NaxaLibreController(
      *
      * @param annotation A map containing annotation data where the key represents the annotation property
      *                   and the value is the corresponding data. Nullable values are allowed.
+     *
+     * @return A map containing the annotation's data.
      */
-    override fun addAnnotation(annotation: Map<String, Any?>) {
-        libreAnnotationsManager.addAnnotation(annotation)
+    override fun addAnnotation(annotation: Map<String, Any?>): Map<String, Any?> {
+        return libreAnnotationsManager.addAnnotation(annotation)
     }
 
+    /**
+     * Retrieves an annotation by its unique identifier.
+     *
+     * This function delegates the retrieval of an annotation to the underlying
+     * `libreAnnotationsManager`. It fetches an annotation associated with the provided ID.
+     *
+     * @param id The unique identifier of the annotation to retrieve.
+     * @return A map representing the annotation's data
+     *
+     */
+    override fun getAnnotation(id: Long): Map<String, Any?>? {
+        return libreAnnotationsManager.getAnnotation(id)
+    }
 
     /**
      * Removes a layer from the map style by its ID.
@@ -967,7 +985,7 @@ class NaxaLibreController(
      * It is however caught within the method and will return false.
      */
     override fun removeLayerAt(index: Long): Boolean {
-        return libreMap.style?.removeLayerAt(index.toInt()) ?: false
+        return libreMap.style?.removeLayerAt(index.toInt()) == true
     }
 
     /**
@@ -996,6 +1014,28 @@ class NaxaLibreController(
         libreMap.style?.removeImage(name)
     }
 
+    /**
+     * Removes an annotation from the underlying annotation management system.
+     *
+     * This function delegates the removal operation to the `LibreAnnotationsManager`.
+     * The annotation to be removed is identified by the data provided in the `args` map.
+     *
+     */
+    override fun removeAnnotation(args: Map<String, Any?>) {
+        Log.d("TAG", "removeAnnotation: ${args}")
+        libreAnnotationsManager.deleteAnnotation(args)
+    }
+
+    /**
+     * Removes all annotations from the current document.
+     *
+     * This function delegates the removal of all annotations of given type to the underlying
+     * `libreAnnotationsManager`. It effectively clears all annotations of type defined on the args.
+     *
+     */
+    override fun removeAllAnnotations(args: Map<String, Any?>) {
+        libreAnnotationsManager.deleteAllAnnotations(args)
+    }
 
     /**
      * Retrieves an image from the current map style by its identifier and returns it as a byte array.
@@ -1180,7 +1220,7 @@ class NaxaLibreController(
             try {
                 getSource(id)
                 true
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 false
             }
         } else {
@@ -1364,22 +1404,30 @@ class NaxaLibreController(
                 .build()
 
             libreMap.getStyle { style ->
-                val locationComponentActivationOptions = LocationComponentActivationOptions
-                    .builder(activity, style)
-                    .locationComponentOptions(locationComponentOptions)
-                    .useDefaultLocationEngine(false)
-                    .locationEngineRequest(
-                        LocationEngineRequestArgsParser.fromArgs(
-                            locationEngineRequestParams ?: emptyMap<Any, Any>()
-                        ).build()
-                    )
-                    .locationEngine(NaxaLibreLocationEngine.create(activity, provider))
-                    .build()
+                if (style.isFullyLoaded) {
+                    val locationComponentActivationOptions = LocationComponentActivationOptions
+                        .builder(activity, style)
+                        .locationComponentOptions(locationComponentOptions)
+                        .useDefaultLocationEngine(false)
+                        .locationEngineRequest(
+                            LocationEngineRequestArgsParser.fromArgs(
+                                locationEngineRequestParams ?: emptyMap<Any, Any>()
+                            ).build()
+                        )
+                        .locationEngine(
+                            NaxaLibreLocationEngine.create(
+                                activity,
+                                provider,
+                                isStyleFullyLoaded = { style.isFullyLoaded }
+                            )
+                        )
+                        .build()
 
-                libreMap.locationComponent.apply {
-                    activateLocationComponent(locationComponentActivationOptions)
-                    isLocationComponentEnabled = true
-                    setupArgs(params)
+                    libreMap.locationComponent.apply {
+                        activateLocationComponent(locationComponentActivationOptions)
+                        isLocationComponentEnabled = true
+                        setupArgs(params)
+                    }
                 }
             }
         } catch (e: Exception) {
