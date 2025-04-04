@@ -332,7 +332,7 @@ class NaxaLibreAnnotationsManager(
         if (point.size < 2) throw Exception("Point argument must be a list of two numbers")
 
         val annotation = AnnotationArgsParser.parseArgs<CircleLayer>(args = args).copy(
-            geometry = Point.fromLngLat(point.last(), point.first()),
+            geometry = Point.fromLngLat(point[1], point[0]),
         )
 
         if (libreMap.style?.getLayer(annotation.layer.id) != null) {
@@ -523,7 +523,7 @@ class NaxaLibreAnnotationsManager(
         if (point.size < 2) throw Exception("Point argument must be a list of two numbers")
 
         val annotation = AnnotationArgsParser.parseArgs<SymbolLayer>(args = args).copy(
-            geometry = Point.fromLngLat(point.last(), point.first()),
+            geometry = Point.fromLngLat(point[1], point[0]),
         )
 
         if (libreMap.style?.getLayer(annotation.layer.id) != null) {
