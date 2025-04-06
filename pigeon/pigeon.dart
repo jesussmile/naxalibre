@@ -141,7 +141,10 @@ abstract class NaxaLibreHostApi {
 
   Map<String, Object?> addAnnotation(Map<String, Object?> annotation);
 
-  Map<String, Object?> updateAnnotation(int id, Map<String, Object?> annotation);
+  Map<String, Object?> updateAnnotation(
+    int id,
+    Map<String, Object?> annotation,
+  );
 
   Map<String, Object?>? getAnnotation(int id);
 

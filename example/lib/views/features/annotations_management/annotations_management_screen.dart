@@ -57,10 +57,9 @@ class _LayerManagementScreenState
 
   Future<void> _addCircleAnnotation() async {
     await controller?.animateCamera(
-      CameraUpdateFactory.newCameraPosition(CameraPosition(
-          target: LatLng(27.741712, 85.331033),
-          zoom: 15
-      )),
+      CameraUpdateFactory.newCameraPosition(
+        CameraPosition(target: LatLng(27.741712, 85.331033), zoom: 15),
+      ),
     );
 
     await controller?.addAnnotation<CircleAnnotation>(
@@ -98,10 +97,9 @@ class _LayerManagementScreenState
 
   Future<void> _addPolylineAnnotation() async {
     await controller?.animateCamera(
-      CameraUpdateFactory.newCameraPosition(CameraPosition(
-        target: LatLng(27.741712, 85.331033),
-        zoom: 15
-      )),
+      CameraUpdateFactory.newCameraPosition(
+        CameraPosition(target: LatLng(27.741712, 85.331033), zoom: 15),
+      ),
     );
 
     await controller?.addAnnotation<PolylineAnnotation>(
@@ -251,9 +249,9 @@ class _LayerManagementScreenState
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Polyline annotation updated')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Polyline annotation updated')),
+    );
   }
 
   Future<void> _updatePointAnnotation(int id) async {
@@ -263,7 +261,7 @@ class _LayerManagementScreenState
         image: NetworkStyleImage(
           imageId: "pointImageId",
           url:
-          "https://www.cp-desk.com/wp-content/uploads/2019/02/map-marker-free-download-png.png",
+              "https://www.cp-desk.com/wp-content/uploads/2019/02/map-marker-free-download-png.png",
         ),
         options: PointAnnotationOptions(
           point: LatLng(27.7525, 85.3578),
