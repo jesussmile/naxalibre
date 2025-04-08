@@ -8,7 +8,6 @@ part of 'source.dart';
 /// further use in the application or native platform.
 
 class RasterSource extends Source<RasterSourceProperties> {
-
   /// An optional TileSet to be added to the source.
   ///
   /// A TileSet represents a collection of tiles and their associated metadata.
