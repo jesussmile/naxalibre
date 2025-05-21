@@ -904,7 +904,7 @@ class NaxaLibreHostApi {
     }
   }
 
-  Future<void> zoomBy(int by) async {
+  Future<void> zoomBy(double by) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.zoomBy$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
