@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:naxalibre/naxalibre.dart';
+import 'package:another_flushbar/flushbar.dart';
 
 import '../base_map/base_map_screen.dart';
 import 'widgets/layer_button.dart';
@@ -16,51 +17,119 @@ class LayerManagementScreen extends BaseMapScreen {
 
 class _LayerManagementScreenState
     extends BaseMapScreenState<LayerManagementScreen> {
+  int? _selectedIndex;
+
+  void _onAction(int index, VoidCallback action) async {
+    if (_selectedIndex == index) {
+      setState(() {
+        _selectedIndex = null;
+      });
+      if (index == 0) {
+        // Remove Circle Layer and Source
+        await controller?.removeLayer('layerId');
+        await controller?.removeLayer('symbolLayerId');
+        await controller?.removeSource('sourceId');
+      } else if (index == 1) {
+        // Remove Line Layer and Source
+        await controller?.removeLayer('lineLayerId');
+        await controller?.removeSource('lineSourceId');
+      } else if (index == 2) {
+        // Remove Fill Layer and Source
+        await controller?.removeLayer('fillLayerId');
+        await controller?.removeSource('fillSourceId');
+      } else if (index == 3) {
+        // Remove Point Layer and Source
+        await controller?.removeLayer('singleFeatureLayerId');
+        await controller?.removeSource('singleFeatureSourceId');
+      } else if (index == 4) {
+        // Remove 3D Building Layer and Source
+        await controller?.removeLayer('3dLayerId');
+        await controller?.removeSource('3dSourceId');
+      } else if (index == 5) {
+        // Remove Hillshade Layer and Source
+        await controller?.removeLayer('hillShadeLayerId');
+        await controller?.removeSource('hillShadeSourceId');
+      } else if (index == 6) {
+        // Remove/Reset Updated Source (GeoJson)
+        await controller?.removeSource('sourceId');
+      }
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+      action();
+    }
+  }
+
   @override
   Widget buildMapWithControls() {
+    final buttons = [
+      _LayerActionButton(
+        icon: Icons.circle,
+        label: "Add Circle",
+        selected: _selectedIndex == 0,
+        onPressed: () => _onAction(0, _addCircleLayer),
+      ),
+      _LayerActionButton(
+        icon: Icons.timeline,
+        label: "Add Line",
+        selected: _selectedIndex == 1,
+        onPressed: () => _onAction(1, _addLineLayer),
+      ),
+      _LayerActionButton(
+        icon: Icons.format_color_fill,
+        label: "Add Fill",
+        selected: _selectedIndex == 2,
+        onPressed: () => _onAction(2, _addFillLayer),
+      ),
+      _LayerActionButton(
+        icon: Icons.add_location_alt,
+        label: "Add Point",
+        selected: _selectedIndex == 3,
+        onPressed: () => _onAction(3, _addPointLayerFromFeature),
+      ),
+      _LayerActionButton(
+        icon: Icons.location_city,
+        label: "3D Building",
+        selected: _selectedIndex == 4,
+        onPressed: () => _onAction(4, _add3dBuilding),
+      ),
+      _LayerActionButton(
+        icon: Icons.terrain,
+        label: "Hillshade",
+        selected: _selectedIndex == 5,
+        onPressed: () => _onAction(5, _addHillShadeLayer),
+      ),
+      _LayerActionButton(
+        icon: Icons.update,
+        label: "Update Source",
+        selected: _selectedIndex == 6,
+        onPressed: () => _onAction(6, _updateGeoJsonUrl),
+      ),
+    ];
     return Stack(
       children: [
         buildBaseMap(),
-        Positioned(
-          right: 16,
-          bottom: 16,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              LayerButton(
-                label: "Add Circle Layer",
-                onPressed: () => _addCircleLayer(),
-              ),
-              LayerButton(
-                label: "Add Line Layer",
-                onPressed: () => _addLineLayer(),
-              ),
-              LayerButton(
-                label: "Add Fill Layer",
-                onPressed: () => _addFillLayer(),
-              ),
-              LayerButton(
-                label: "Add Point From Feature",
-                onPressed: () => _addPointLayerFromFeature(),
-              ),
-              LayerButton(
-                label: "Add 3D Building",
-                onPressed: () => _add3dBuilding(),
-              ),
-              LayerButton(
-                label: "Add Hillshade Layer",
-                onPressed: () => _addHillShadeLayer(),
-              ),
-              LayerButton(
-                label: "Update Circle Layer Source",
-                onPressed: () => _updateGeoJsonUrl(),
-              ),
-              // LayerButton(
-              //   label: "Add Vector Layer",
-              //   onPressed: () => _addVectorLayer(),
-              // ),
-            ],
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 24, left: 16, right: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.35),
+              borderRadius: BorderRadius.circular(32),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15),
+                  blurRadius: 8,
+                  offset: const Offset(2, 4),
+                ),
+              ],
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(mainAxisSize: MainAxisSize.min, children: buttons),
+            ),
           ),
         ),
       ],
@@ -150,7 +219,17 @@ class _LayerManagementScreenState
     final messenger = ScaffoldMessenger.of(context);
     messenger.clearSnackBars();
     messenger.hideCurrentSnackBar();
-    messenger.showSnackBar(const SnackBar(content: Text('Circle layer added')));
+    Flushbar(
+      messageText: const Text(
+        'Circle layer added',
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+      ),
+      backgroundColor: Colors.white.withOpacity(0.95),
+      margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
+      borderRadius: BorderRadius.circular(12),
+      duration: const Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+    ).show(context);
   }
 
   Future<void> _addPointLayerFromFeature() async {
@@ -194,7 +273,17 @@ class _LayerManagementScreenState
     final messenger = ScaffoldMessenger.of(context);
     messenger.clearSnackBars();
     messenger.hideCurrentSnackBar();
-    messenger.showSnackBar(const SnackBar(content: Text('Point added')));
+    Flushbar(
+      messageText: const Text(
+        'Point added',
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+      ),
+      backgroundColor: Colors.white.withOpacity(0.95),
+      margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
+      borderRadius: BorderRadius.circular(12),
+      duration: const Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+    ).show(context);
   }
 
   Future<void> _addLineLayer() async {
@@ -248,7 +337,17 @@ class _LayerManagementScreenState
     final messenger = ScaffoldMessenger.of(context);
     messenger.clearSnackBars();
     messenger.hideCurrentSnackBar();
-    messenger.showSnackBar(const SnackBar(content: Text('Line layer added')));
+    Flushbar(
+      messageText: const Text(
+        'Line layer added',
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+      ),
+      backgroundColor: Colors.white.withOpacity(0.95),
+      margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
+      borderRadius: BorderRadius.circular(12),
+      duration: const Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+    ).show(context);
   }
 
   Future<void> _addFillLayer() async {
@@ -285,7 +384,17 @@ class _LayerManagementScreenState
     final messenger = ScaffoldMessenger.of(context);
     messenger.clearSnackBars();
     messenger.hideCurrentSnackBar();
-    messenger.showSnackBar(const SnackBar(content: Text('Fill layer added')));
+    Flushbar(
+      messageText: const Text(
+        'Fill layer added',
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+      ),
+      backgroundColor: Colors.white.withOpacity(0.95),
+      margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
+      borderRadius: BorderRadius.circular(12),
+      duration: const Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+    ).show(context);
   }
 
   Future<void> _add3dBuilding() async {
@@ -325,7 +434,17 @@ class _LayerManagementScreenState
     final messenger = ScaffoldMessenger.of(context);
     messenger.clearSnackBars();
     messenger.hideCurrentSnackBar();
-    messenger.showSnackBar(const SnackBar(content: Text('3D building added')));
+    Flushbar(
+      messageText: const Text(
+        '3D building added',
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+      ),
+      backgroundColor: Colors.white.withOpacity(0.95),
+      margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
+      borderRadius: BorderRadius.circular(12),
+      duration: const Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+    ).show(context);
   }
 
   Future<void> _addHillShadeLayer() async {
@@ -362,45 +481,18 @@ class _LayerManagementScreenState
     final messenger = ScaffoldMessenger.of(context);
     messenger.clearSnackBars();
     messenger.hideCurrentSnackBar();
-    messenger.showSnackBar(
-      const SnackBar(content: Text('Hill shade layer added')),
-    );
+    Flushbar(
+      messageText: const Text(
+        'Hill shade layer added',
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+      ),
+      backgroundColor: Colors.white.withOpacity(0.95),
+      margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
+      borderRadius: BorderRadius.circular(12),
+      duration: const Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+    ).show(context);
   }
-
-  // Future<void> _addVectorLayer() async {
-  //   await controller?.addSourceWithLayers<VectorSource>(
-  //     source: VectorSource(
-  //       sourceId: "vectorSourceId",
-  //       tileSet: TileSet(
-  //         tiles: [
-  //           'https://example.com.np/tile/road-vector-tile/{z}/{x}/{y}/?cache=true',
-  //         ],
-  //       ),
-  //       sourceProperties: VectorSourceProperties(),
-  //     ),
-  //     layers: [
-  //       LineLayer(
-  //         layerId: "vectorLineLayerId",
-  //         sourceId: "vectorSourceId",
-  //         layerProperties: LineLayerProperties(
-  //           lineColor: 'red',
-  //           lineWidth: 2.0,
-  //           lineGapWidth: 1.0,
-  //           lineJoin: LineJoin.round,
-  //           lineCap: LineCap.butt,
-  //           sourceLayer: 'default',
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  //
-  //   if (!mounted) return;
-  //
-  //   final messenger = ScaffoldMessenger.of(context);
-  //   messenger.clearSnackBars();
-  //   messenger.hideCurrentSnackBar();
-  //   messenger.showSnackBar(const SnackBar(content: Text('Vector layer added')));
-  // }
 
   Future<void> _updateGeoJsonUrl() async {
     await controller?.setGeoJsonUrl(
@@ -414,8 +506,81 @@ class _LayerManagementScreenState
     final messenger = ScaffoldMessenger.of(context);
     messenger.clearSnackBars();
     messenger.hideCurrentSnackBar();
-    messenger.showSnackBar(
-      const SnackBar(content: Text('GeoJson source url updated')),
+    Flushbar(
+      messageText: const Text(
+        'GeoJson source url updated',
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+      ),
+      backgroundColor: Colors.white.withOpacity(0.95),
+      margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
+      borderRadius: BorderRadius.circular(12),
+      duration: const Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+    ).show(context);
+  }
+}
+
+/// Compact icon+label button for layer actions.
+class _LayerActionButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onPressed;
+
+  const _LayerActionButton({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+    this.selected = false,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+      child: Material(
+        color:
+            selected
+                ? Colors.white.withOpacity(0.25)
+                : Colors.white.withOpacity(0.10),
+        borderRadius: BorderRadius.circular(32),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(32),
+          onTap: onPressed,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12.0,
+              vertical: 8.0,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  color:
+                      selected
+                          ? Theme.of(context).colorScheme.primary
+                          : Colors.white,
+                  size: 24,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color:
+                        selected
+                            ? Theme.of(context).colorScheme.primary
+                            : Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
