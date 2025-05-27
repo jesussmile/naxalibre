@@ -1,0 +1,35 @@
+PODS:
+  - Flutter (1.0.0)
+  - integration_test (0.0.1):
+    - Flutter
+  - MapLibre (6.13.0)
+  - naxalibre (0.0.10):
+    - Flutter
+    - MapLibre (= 6.13.0)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - naxalibre (from `.symlinks/plugins/naxalibre/ios`)
+
+SPEC REPOS:
+  trunk:
+    - MapLibre
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
+  naxalibre:
+    :path: ".symlinks/plugins/naxalibre/ios"
+
+SPEC CHECKSUMS:
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
+  MapLibre: 530d4b60fa6a07b973f538b31559b36cdbc20539
+  naxalibre: f30a39750a8c5da8d86f59b93f99b67a31bb9fce
+
+PODFILE CHECKSUM: 4305caec6b40dde0ae97be1573c53de1882a07e5
+
+COCOAPODS: 1.16.2
