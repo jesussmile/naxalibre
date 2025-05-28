@@ -950,50 +950,15 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
         }
     }
 
-    
-    /// Handles the configuration of UI settings for the map view based on the provided arguments.
-    /// - Parameter args: A dictionary containing UI setting options.
-    ///
-    /// This function parses the provided arguments into a `NaxaLibreUiSettings` instance using `NaxaLibreUiSettingsArgsParser`.
-    /// It then applies these settings to the `libreView` instance, adjusting visibility, positioning, margins, and gesture settings accordingly.
-    ///
-    private func handleUiSettings(_ args: [String: Any?]) {
-        let uiSettings = NaxaLibreUiSettingsArgsParser.parseArgs(args)
-        libreView.applyUiSettings(uiSettings)
-    }
-    
-    /// Handles the processing of map options by parsing the provided arguments and applying them to the map view.
-    /// - Parameter args: A dictionary containing map configuration options.
-    ///
-    /// This function parses the provided arguments into a `NaxaLibreMapOptions` instance using `NaxaLibreMapOptionsArgsParser`
-    /// and then applies these options to the `libreView` instance.
     private func handleMapOptions(_ args: [String: Any?]) {
-        let options = NaxaLibreMapOptionsArgsParser.parseArgs(args)
-        libreView.applyMapOptions(options)
+        // TODO: Implement map options handling
     }
-    
-    /// Handles the processing of location settings options by parsing the provided arguments and applying them to the map view.
-    /// - Parameter args: A dictionary containing map configuration options.
-    ///
-    /// This function parses the provided arguments into a `NaxaLibreLocationSettings` instance using `NaxaLibreLocationSettingsArgsParser`
-    /// and then applies these options to the `libreView` instance.
+
+    private func handleUiSettings(_ args: [String: Any?]) {
+        // TODO: Implement UI settings handling
+    }
+
     private func handleLocationSettings(_ args: [String: Any?]) {
-        let locationSettings = NaxaLibreLocationSettingsArgsParser.parseArgs(args)
-        
-        libreView.showsUserLocation = locationSettings.locationEnabled
-        
-        if locationSettings.locationEnabled {
-            
-            let manager = NaxaLibreLocationManager()
-            manager.applyLocationSettings(locationSettings)
-            
-            libreView.locationManager = manager
-            
-            libreView.shouldRequestAuthorizationToUseLocationServices = locationSettings.shouldRequestAuthorizationOrPermission
-        }
-    }
-    
-    deinit {
-        naxaLibreListeners.unregister()
+        // TODO: Implement location settings handling
     }
 }

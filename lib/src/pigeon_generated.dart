@@ -2097,30 +2097,6 @@ class NaxaLibreHostApi {
       return (pigeonVar_replyList[0] as List<Object?>?)!.cast<Map<Object?, Object?>>();
     }
   }
-
-  /// Adds an image overlay from bytes, using a LatLngQuad for placement.
-  Future<void> addImageOverlay(String sourceId, Uint8List bytes, Map<String, Object?> quad) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.addImageOverlay$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[sourceId, bytes, quad]);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
 }
 
 abstract class NaxaLibreFlutterApi {

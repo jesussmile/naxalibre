@@ -336,8 +336,6 @@ protocol NaxaLibreHostApi {
   func deleteRegion(id: Int64, completion: @escaping (Result<Bool, Error>) -> Void)
   func deleteAllRegions(completion: @escaping (Result<[Int64: Bool], Error>) -> Void)
   func listRegions(completion: @escaping (Result<[[AnyHashable?: Any?]], Error>) -> Void)
-  /// Adds an image overlay from bytes, using a LatLngQuad for placement.
-  func addImageOverlay(sourceId: String, bytes: FlutterStandardTypedData, quad: [String: Any?]) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -1403,24 +1401,6 @@ class NaxaLibreHostApiSetup {
       }
     } else {
       listRegionsChannel.setMessageHandler(nil)
-    }
-    /// Adds an image overlay from bytes, using a LatLngQuad for placement.
-    let addImageOverlayChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.addImageOverlay\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      addImageOverlayChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let sourceIdArg = args[0] as! String
-        let bytesArg = args[1] as! FlutterStandardTypedData
-        let quadArg = args[2] as! [String: Any?]
-        do {
-          try api.addImageOverlay(sourceId: sourceIdArg, bytes: bytesArg, quad: quadArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      addImageOverlayChannel.setMessageHandler(nil)
     }
   }
 }
