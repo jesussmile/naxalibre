@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:naxalibre_example/views/features/annotations_management/annotations_management_screen.dart';
 import 'package:naxalibre_example/views/features/offline_management/offline_management_screen.dart';
+import 'package:naxalibre_example/views/features/image_overlay/image_overlay_screen.dart';
 import 'dart:ui';
 
 import '../../common/feature_card.dart';
@@ -46,6 +47,17 @@ class HomeScreen extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (_) => const BasicMapControlsScreen(),
                   ),
+                ),
+          ),
+          _ModernFeatureCard(
+            title: 'Image Overlay',
+            description: 'Add and manage image overlays on the map',
+            icon: Icons.image_outlined,
+            iconColor: Colors.pinkAccent,
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ImageOverlayScreen()),
                 ),
           ),
           _ModernFeatureCard(
