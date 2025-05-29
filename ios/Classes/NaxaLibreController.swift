@@ -687,6 +687,27 @@ class NaxaLibreController: NSObject, NaxaLibreHostApi {
         try libreAnnotationsManager.deleteAllAnnotations(args: args)
     }
     
+    func showCallout(annotationId: Int64, title: String, subtitle: String?) throws {
+        // Implementation for showing callout
+        // For now, we'll provide a basic implementation that throws an error indicating it's not supported
+        throw NSError(domain: "Callout functionality not yet implemented", code: 0, userInfo: nil)
+    }
+    
+    func hideCallout(annotationId: Int64) throws {
+        // Implementation for hiding callout
+        throw NSError(domain: "Callout functionality not yet implemented", code: 0, userInfo: nil)
+    }
+    
+    func updateCallout(annotationId: Int64, title: String, subtitle: String?) throws {
+        // Implementation for updating callout
+        throw NSError(domain: "Callout functionality not yet implemented", code: 0, userInfo: nil)
+    }
+    
+    func hideAllCallouts() throws {
+        // Implementation for hiding all callouts
+        throw NSError(domain: "Callout functionality not yet implemented", code: 0, userInfo: nil)
+    }
+    
     func getImage(id: String) throws -> FlutterStandardTypedData {
         guard let image = libreView.style?.image(forName: id),
               let data = image.pngData() else {

@@ -11,6 +11,7 @@ import '../layers_management/layer_management_screen.dart';
 import '../location_features/location_features_screen.dart';
 import '../map_performance/map_performance_screen.dart';
 import '../map_utilities/map_utilities_screen.dart';
+import '../interactive_markers/interactive_markers_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -83,6 +84,19 @@ class HomeScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (_) => const LayerManagementScreen(),
+                  ),
+                ),
+          ),
+          _ModernFeatureCard(
+            title: 'Interactive Markers',
+            description: 'Add, tap, and drag markers on the map',
+            icon: Icons.place_outlined,
+            iconColor: Colors.amberAccent,
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const InteractiveMarkersScreen(),
                   ),
                 ),
           ),

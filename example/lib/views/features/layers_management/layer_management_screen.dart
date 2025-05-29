@@ -18,6 +18,159 @@ class LayerManagementScreen extends BaseMapScreen {
 class _LayerManagementScreenState
     extends BaseMapScreenState<LayerManagementScreen> {
   int? _selectedIndex;
+  // To store our annotations, mapping native ID to annotation data
+  final Map<int, Map<String, dynamic>> _annotations = {};
+  // To store the ID of the annotation currently being dragged
+  int? _draggedAnnotationId;
+  // To display some info about the drag operation
+  String _draggedAnnotationInfo = "";
+  // A counter for unique annotation IDs, if needed for addAnnotation
+  // int _annotationIdCounter = 0; // Let's rely on native IDs primarily
+
+  // Store listener references to remove them in dispose()
+  OnAnnotationClick? _onAnnotationClickHandler;
+  OnAnnotationLongClick? _onAnnotationLongClickHandler;
+  OnAnnotationDrag? _onAnnotationDragHandler;
+
+  @override
+  void initState() {
+    super.initState();
+    // Listeners will be set up in onMapCreated when controller is confirmed.
+    // Ensure test_icon is added for PointAnnotations
+    // This could also be done in onMapCreated or once when needed.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (controller != null && mounted) {
+        _ensureStyleImageLoaded();
+      }
+    });
+  }
+
+  Future<void> _ensureStyleImageLoaded() async {
+    bool? exists = await controller?.isStyleImageExist('test_icon');
+    if (exists == false) {
+      await controller?.addStyleImage(
+        image: NetworkStyleImage(
+          imageId: 'test_icon',
+          url:
+              'https://www.pngplay.com/wp-content/uploads/9/Map-Marker-PNG-Pic-Background.png',
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    // Remove listeners when the widget is disposed
+    if (controller != null) {
+      if (_onAnnotationClickHandler != null) {
+        controller!.removeOnAnnotationClickListener(_onAnnotationClickHandler!);
+      }
+      if (_onAnnotationLongClickHandler != null) {
+        controller!.removeOnAnnotationLongClickListener(
+          _onAnnotationLongClickHandler!,
+        );
+      }
+      if (_onAnnotationDragHandler != null) {
+        controller!.removeOnAnnotationDragListener(_onAnnotationDragHandler!);
+      }
+    }
+    super.dispose();
+  }
+
+  void _setupAnnotationListeners() {
+    if (!mounted || controller == null) {
+      print(
+        "Controller not ready or component not mounted for annotation listeners.",
+      );
+      return;
+    }
+
+    _onAnnotationClickHandler = (Map<String, Object?> annotation) {
+      if (!mounted) return;
+      final dynamic annotationId =
+          annotation['id']; // Should be int from native
+      final dynamic properties = annotation['properties'];
+      String title = "Unknown ID";
+      if (properties is Map && properties.containsKey('title')) {
+        title = properties['title'] as String;
+      } else if (annotationId != null) {
+        title = annotationId.toString();
+      }
+
+      setState(() {
+        _draggedAnnotationInfo = "Tapped: ID $annotationId, Title: $title";
+      });
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Tapped: $title")));
+    };
+    controller!.addOnAnnotationClickListener(_onAnnotationClickHandler!);
+
+    _onAnnotationLongClickHandler = (Map<String, Object?> annotation) {
+      if (!mounted) return;
+      final dynamic annotationId = annotation['id'];
+      print("Annotation Long Clicked: ${annotation['id']}");
+      setState(() {
+        _draggedAnnotationInfo = "Long Clicked: ID $annotationId";
+      });
+    };
+    controller!.addOnAnnotationLongClickListener(
+      _onAnnotationLongClickHandler!,
+    );
+
+    _onAnnotationDragHandler = (
+      int id,
+      String type,
+      Map<String, Object?> geometry,
+      Map<String, Object?> updatedGeometry,
+      AnnotationDragEvent event,
+    ) {
+      if (!mounted) return;
+      final newCoords = updatedGeometry['coordinates'];
+      print(
+        "Annotation Drag: ID $id, Event: ${event.name}, New Coords $newCoords",
+      );
+      setState(() {
+        _draggedAnnotationInfo =
+            "Drag Event: ID $id, Event: ${event.name}, Pos: $newCoords";
+        if (event == AnnotationDragEvent.start) {
+          _draggedAnnotationId = id;
+        } else if (event == AnnotationDragEvent.end) {
+          _draggedAnnotationId = null;
+          if (_annotations.containsKey(id)) {
+            _annotations[id]?['geometry'] = updatedGeometry;
+            if (_annotations[id]?['options']?['point'] is LatLng) {
+              _annotations[id]!['options']!['point'] = LatLng(
+                (updatedGeometry['coordinates'] as List)[1] as double,
+                (updatedGeometry['coordinates'] as List)[0] as double,
+              );
+            }
+            _draggedAnnotationInfo += "\nFinalized position for $id.";
+          }
+        } else if (event == AnnotationDragEvent.dragging) {
+          if (_annotations.containsKey(id)) {
+            _annotations[id]?['geometry'] = updatedGeometry;
+            if (_annotations[id]?['options']?['point'] is LatLng) {
+              _annotations[id]!['options']!['point'] = LatLng(
+                (updatedGeometry['coordinates'] as List)[1] as double,
+                (updatedGeometry['coordinates'] as List)[0] as double,
+              );
+            }
+          }
+        }
+      });
+    };
+    controller!.addOnAnnotationDragListener(_onAnnotationDragHandler!);
+    print("Annotation listeners setup successfully.");
+  }
+
+  @override
+  void onMapCreated(NaxaLibreController controller) {
+    super.onMapCreated(controller);
+    this.controller = controller;
+    _ensureStyleImageLoaded();
+    _setupAnnotationListeners();
+  }
 
   void _onAction(int index, VoidCallback action) async {
     if (_selectedIndex == index) {
@@ -25,32 +178,25 @@ class _LayerManagementScreenState
         _selectedIndex = null;
       });
       if (index == 0) {
-        // Remove Circle Layer and Source
         await controller?.removeLayer('layerId');
         await controller?.removeLayer('symbolLayerId');
         await controller?.removeSource('sourceId');
       } else if (index == 1) {
-        // Remove Line Layer and Source
         await controller?.removeLayer('lineLayerId');
         await controller?.removeSource('lineSourceId');
       } else if (index == 2) {
-        // Remove Fill Layer and Source
         await controller?.removeLayer('fillLayerId');
         await controller?.removeSource('fillSourceId');
       } else if (index == 3) {
-        // Remove Point Layer and Source
         await controller?.removeLayer('singleFeatureLayerId');
         await controller?.removeSource('singleFeatureSourceId');
       } else if (index == 4) {
-        // Remove 3D Building Layer and Source
         await controller?.removeLayer('3dLayerId');
         await controller?.removeSource('3dSourceId');
       } else if (index == 5) {
-        // Remove Hillshade Layer and Source
         await controller?.removeLayer('hillShadeLayerId');
         await controller?.removeSource('hillShadeSourceId');
       } else if (index == 6) {
-        // Remove/Reset Updated Source (GeoJson)
         await controller?.removeSource('sourceId');
       }
     } else {

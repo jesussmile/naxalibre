@@ -275,6 +275,10 @@ interface NaxaLibreHostApi {
   fun removeImage(name: String)
   fun removeAnnotation(args: Map<String, Any?>)
   fun removeAllAnnotations(args: Map<String, Any?>)
+  fun showCallout(annotationId: Long, title: String, subtitle: String?)
+  fun hideCallout(annotationId: Long)
+  fun updateCallout(annotationId: Long, title: String, subtitle: String?)
+  fun hideAllCallouts()
   fun getImage(id: String): ByteArray
   fun snapshot(callback: (Result<ByteArray>) -> Unit)
   fun triggerRepaint()
@@ -1340,6 +1344,80 @@ interface NaxaLibreHostApi {
             val argsArg = args[0] as Map<String, Any?>
             val wrapped: List<Any?> = try {
               api.removeAllAnnotations(argsArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.showCallout$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val annotationIdArg = args[0] as Long
+            val titleArg = args[1] as String
+            val subtitleArg = args[2] as String?
+            val wrapped: List<Any?> = try {
+              api.showCallout(annotationIdArg, titleArg, subtitleArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.hideCallout$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val annotationIdArg = args[0] as Long
+            val wrapped: List<Any?> = try {
+              api.hideCallout(annotationIdArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.updateCallout$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val annotationIdArg = args[0] as Long
+            val titleArg = args[1] as String
+            val subtitleArg = args[2] as String?
+            val wrapped: List<Any?> = try {
+              api.updateCallout(annotationIdArg, titleArg, subtitleArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.hideAllCallouts$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              api.hideAllCallouts()
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)

@@ -326,6 +326,10 @@ protocol NaxaLibreHostApi {
   func removeImage(name: String) throws
   func removeAnnotation(args: [String: Any?]) throws
   func removeAllAnnotations(args: [String: Any?]) throws
+  func showCallout(annotationId: Int64, title: String, subtitle: String?) throws
+  func hideCallout(annotationId: Int64) throws
+  func updateCallout(annotationId: Int64, title: String, subtitle: String?) throws
+  func hideAllCallouts() throws
   func getImage(id: String) throws -> FlutterStandardTypedData
   func snapshot(completion: @escaping (Result<FlutterStandardTypedData, Error>) -> Void)
   func triggerRepaint() throws
@@ -1247,6 +1251,68 @@ class NaxaLibreHostApiSetup {
       }
     } else {
       removeAllAnnotationsChannel.setMessageHandler(nil)
+    }
+    let showCalloutChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.showCallout\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      showCalloutChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let annotationIdArg = args[0] as! Int64
+        let titleArg = args[1] as! String
+        let subtitleArg: String? = nilOrValue(args[2])
+        do {
+          try api.showCallout(annotationId: annotationIdArg, title: titleArg, subtitle: subtitleArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      showCalloutChannel.setMessageHandler(nil)
+    }
+    let hideCalloutChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.hideCallout\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      hideCalloutChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let annotationIdArg = args[0] as! Int64
+        do {
+          try api.hideCallout(annotationId: annotationIdArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      hideCalloutChannel.setMessageHandler(nil)
+    }
+    let updateCalloutChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.updateCallout\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      updateCalloutChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let annotationIdArg = args[0] as! Int64
+        let titleArg = args[1] as! String
+        let subtitleArg: String? = nilOrValue(args[2])
+        do {
+          try api.updateCallout(annotationId: annotationIdArg, title: titleArg, subtitle: subtitleArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      updateCalloutChannel.setMessageHandler(nil)
+    }
+    let hideAllCalloutsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.hideAllCallouts\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      hideAllCalloutsChannel.setMessageHandler { _, reply in
+        do {
+          try api.hideAllCallouts()
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      hideAllCalloutsChannel.setMessageHandler(nil)
     }
     let getImageChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.naxalibre.NaxaLibreHostApi.getImage\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
