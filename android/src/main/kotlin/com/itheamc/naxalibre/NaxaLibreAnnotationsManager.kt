@@ -1343,4 +1343,58 @@ class NaxaLibreAnnotationsManager(
 
         source.setGeoJson(Feature.fromGeometry(newGeometry, properties))
     }
+
+    private val calloutManager: NaxaLibreCalloutManager by lazy {
+        NaxaLibreCalloutManager(libreView.context, libreView, libreMap)
+    }
+
+    /**
+     * Shows a callout for a specific annotation.
+     *
+     * @param annotationId The ID of the annotation to show the callout for
+     * @param title The title text to display in the callout
+     * @param subtitle Optional subtitle text to display in the callout
+     */
+    fun showCallout(annotationId: Long, title: String, subtitle: String?) {
+        val annotation = allAnnotations.find { it.id == annotationId }
+        if (annotation != null) {
+            val position = when (annotation.geometry) {
+                is Point -> {
+                    val coordinates = (annotation.geometry as Point)
+                    LatLng(coordinates.latitude(), coordinates.longitude())
+                }
+                else -> null
+            }
+            position?.let {
+                calloutManager.showCallout(annotationId, title, subtitle, it)
+            }
+        }
+    }
+
+    /**
+     * Hides the callout for a specific annotation.
+     *
+     * @param annotationId The ID of the annotation whose callout should be hidden
+     */
+    fun hideCallout(annotationId: Long) {
+        calloutManager.hideCallout(annotationId)
+    }
+
+    /**
+     * Updates the content of a callout for a specific annotation.
+     *
+     * @param annotationId The ID of the annotation whose callout should be updated
+     * @param title The new title text to display in the callout
+     * @param subtitle Optional new subtitle text to display in the callout
+     */
+    fun updateCallout(annotationId: Long, title: String, subtitle: String?) {
+        calloutManager.updateCallout(annotationId, title, subtitle)
+    }
+
+    /**
+     * Hides all callouts currently displayed on the map.
+     */
+    fun hideAllCallouts() {
+        calloutManager.hideAllCallouts()
+    }
 }

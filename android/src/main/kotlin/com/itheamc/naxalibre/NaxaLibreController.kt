@@ -1682,4 +1682,42 @@ class NaxaLibreController(
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 101
     }
+
+    /**
+     * Shows a callout for a specific annotation.
+     *
+     * @param annotationId The ID of the annotation to show the callout for
+     * @param title The title text to display in the callout
+     * @param subtitle Optional subtitle text to display in the callout
+     */
+    override fun showCallout(annotationId: Long, title: String, subtitle: String?) {
+        libreAnnotationsManager.showCallout(annotationId, title, subtitle)
+    }
+
+    /**
+     * Hides the callout for a specific annotation.
+     *
+     * @param annotationId The ID of the annotation whose callout should be hidden
+     */
+    override fun hideCallout(annotationId: Long) {
+        libreAnnotationsManager.hideCallout(annotationId)
+    }
+
+    /**
+     * Updates the content of a callout for a specific annotation.
+     *
+     * @param annotationId The ID of the annotation whose callout should be updated
+     * @param title The new title text to display in the callout
+     * @param subtitle Optional new subtitle text to display in the callout
+     */
+    override fun updateCallout(annotationId: Long, title: String, subtitle: String?) {
+        libreAnnotationsManager.updateCallout(annotationId, title, subtitle)
+    }
+
+    /**
+     * Hides all callouts currently displayed on the map.
+     */
+    override fun hideAllCallouts() {
+        libreAnnotationsManager.hideAllCallouts()
+    }
 }
