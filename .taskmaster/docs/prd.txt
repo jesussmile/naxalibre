@@ -1,0 +1,52 @@
+# Terrain Visualization Integration for Naxalibre
+
+## Project Overview
+The goal of this project is to integrate the terrain visualization capabilities from the FlightCanvas Terrain project into the Naxalibre application. This integration will enable Naxalibre to display 3D terrain visualization similar to FlightCanvas Terrain, with a focus on offline functionality for pilots.
+
+## Background
+Naxalibre is an existing Flutter application that currently has MBTiles loading capabilities. FlightCanvas Terrain is a separate project that provides terrain visualization using LERC (Limited Error Raster Compression) format data and native code integration through FFI.
+
+## Requirements
+
+### Core Requirements
+1. Import necessary LERC decoder functionality from FlightCanvas Terrain
+2. Create a TerrainLoaderScreen similar to the existing MBTilesLoaderScreen
+3. Implement terrain and hillshade layer rendering in Naxalibre
+4. Ensure all terrain data can be accessed offline
+5. Optimize performance for mobile devices
+
+### Technical Requirements
+1. Port the LERC C++ native code and build scripts to Naxalibre
+2. Integrate Dart FFI bindings for the LERC decoder
+3. Copy and adapt terrain data assets from FlightCanvas Terrain
+4. Develop a user interface for controlling terrain visualization
+5. Ensure compatibility with existing map layers
+
+### User Experience Requirements
+1. Provide controls for terrain visualization (opacity, tile size)
+2. Enable toggling terrain and hillshade layers on/off
+3. Allow adjusting altitude scale for better visualization
+4. Ensure responsive map interaction even with terrain layers
+
+## Implementation Phases
+
+### Phase 1: Core Integration
+- Copy necessary native code and build configurations
+- Port the LERC decoder functionality
+- Implement basic terrain layer rendering
+
+### Phase 2: User Interface Development
+- Create TerrainLoaderScreen with UI controls
+- Implement layer management functionality
+- Add terrain customization options
+
+### Phase 3: Performance Optimization
+- Implement caching mechanisms
+- Optimize terrain rendering
+- Test on various devices
+
+## Success Criteria
+1. Successful rendering of terrain data in Naxalibre
+2. Offline functionality working properly
+3. Acceptable performance on target devices
+4. Integration with existing map layers
