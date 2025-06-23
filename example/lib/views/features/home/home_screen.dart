@@ -4,7 +4,6 @@ import 'package:naxalibre_example/views/features/offline_management/offline_mana
 import 'package:naxalibre_example/views/features/image_overlay/image_overlay_screen.dart';
 import 'dart:ui';
 
-import '../../common/feature_card.dart';
 import '../basic_map_controls/basic_map_controls_screen.dart';
 import '../camera_animations/camera_animations_screen.dart';
 import '../layers_management/layer_management_screen.dart';
@@ -12,6 +11,7 @@ import '../location_features/location_features_screen.dart';
 import '../map_performance/map_performance_screen.dart';
 import '../map_utilities/map_utilities_screen.dart';
 import '../interactive_markers/interactive_markers_screen.dart';
+import '../mbtiles_loader/mbtiles_loader_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -160,6 +160,19 @@ class HomeScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (_) => const OfflineManagementScreen(),
+                  ),
+                ),
+          ),
+          _ModernFeatureCard(
+            title: 'MBTiles Loader',
+            description: 'Load and display MBTiles from local assets',
+            icon: Icons.map_outlined,
+            iconColor: Colors.lightGreenAccent,
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const MBTilesLoaderScreen(),
                   ),
                 ),
           ),

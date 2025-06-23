@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# MBTiles files (large binary files)
+assets/*.mbtiles
+assets/**/*.mbtiles
