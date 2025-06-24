@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:naxalibre_example/views/features/annotations_management/annotations_management_screen.dart';
 import 'package:naxalibre_example/views/features/offline_management/offline_management_screen.dart';
 import 'package:naxalibre_example/views/features/image_overlay/image_overlay_screen.dart';
+import 'package:naxalibre_example/views/features/traffic/traffic_screen.dart';
 import 'dart:ui';
 
 import '../basic_map_controls/basic_map_controls_screen.dart';
@@ -12,6 +13,7 @@ import '../map_performance/map_performance_screen.dart';
 import '../map_utilities/map_utilities_screen.dart';
 import '../interactive_markers/interactive_markers_screen.dart';
 import '../mbtiles_loader/mbtiles_loader_screen.dart';
+import '../traffic/traffic_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -174,6 +176,17 @@ class HomeScreen extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (_) => const MBTilesLoaderScreen(),
                   ),
+                ),
+          ),
+          _ModernFeatureCard(
+            title: 'Traffic',
+            description: 'View traffic data with offline capability',
+            icon: Icons.traffic,
+            iconColor: Colors.deepOrangeAccent,
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const TrafficScreen()),
                 ),
           ),
         ],
